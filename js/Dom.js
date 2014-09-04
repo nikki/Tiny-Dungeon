@@ -30,7 +30,8 @@ TM.Dom = (function(w, d) {
 
       this.bind(d, 'DOMContentLoaded', utils.loadAllAssets.call(utils));
       this.bind(d, 'imagesLoaded', game.init);
-      this.bind(d, 'gameInitialised', game.start);
+      this.bind(d, 'gameStart', game.start);
+      this.bind(d, 'gameEnd', game.end);
 
       this.bind(d, 'keydown', function(e) {
         var key = keys[e.keyCode];

@@ -14,7 +14,7 @@ TM.Game = (function(w, d) {
       canvas.init();
       timer.init();
 
-      event = new CustomEvent('gameInitialised');
+      event = new CustomEvent('gameStart');
       d.dispatchEvent(event);
     },
 
@@ -35,7 +35,6 @@ TM.Game = (function(w, d) {
 
         // render
         TM.Screens[TM.currentScreen]();
-        particles.render();
       });
     },
 
@@ -130,7 +129,7 @@ TM.Game = (function(w, d) {
     },
 
     end : function() {
-
+      TM.currentScreen = 'title';
     },
 
     quit : function() {

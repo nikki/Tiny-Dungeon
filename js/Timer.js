@@ -1,5 +1,6 @@
-TM.Timer = (function() {
-  var canvas = TM.Canvas;
+TM.Timer = (function(d) {
+  var canvas = TM.Canvas,
+      event;
 
   function Timer() {
     this.x = 0;
@@ -29,7 +30,8 @@ TM.Timer = (function() {
 
     if (this.elapsedTime >= this.maxTime) {
       // game over
-      // console.log('game over');
+      event = new CustomEvent('gameEnd');
+      d.dispatchEvent(event);
     }
   };
 
@@ -53,7 +55,6 @@ TM.Timer = (function() {
     // time
     canvas.fillRect({ c : 'lightblue', x : 1, y : 1 + (this.elapsedTime | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.elapsedTime | 0) * this.tick });
 
-
     ctx.restore();
   };
 
@@ -76,4 +77,4 @@ TM.Timer = (function() {
 
   return new Timer;
 
-})();
+})(document);
