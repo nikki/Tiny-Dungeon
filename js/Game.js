@@ -3,6 +3,7 @@ TM.Game = (function(w, d) {
       loop = TM.Loop,
       board = TM.Board,
       dungeon = TM.Dungeon,
+      timer = TM.Timer,
       particles = TM.Particles;
 
   var Game = {
@@ -11,6 +12,7 @@ TM.Game = (function(w, d) {
 
       board.init();
       canvas.init();
+      timer.init();
 
       event = new CustomEvent('gameInitialised');
       d.dispatchEvent(event);
@@ -25,8 +27,9 @@ TM.Game = (function(w, d) {
         ctx.clearRect(0, 0, TM.w, TM.h);
 
         // update
-        board.update(seconds);
         dungeon.update(seconds);
+        board.update(seconds);
+        timer.update(seconds);
         particles.update(seconds);
         TWEEN.update();
 
@@ -56,6 +59,9 @@ TM.Game = (function(w, d) {
             if (next && next.type === tile.type) {
               // console.log('merge of ' + tile.spell);
               // board.animateMerge(tile, next);
+
+              timer.remove(4);
+
               board.removeTileAt(tile);
               board.removeTileAt(next);
 

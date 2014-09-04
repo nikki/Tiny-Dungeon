@@ -24,7 +24,7 @@ TM.Canvas = (function() {
     },
 
     drawLine : function(o) {
-      ctx.strokeStyle = 'blue';
+      ctx.strokeStyle = o.c;
       ctx.lineWidth = 1;
       ctx.lineCap = 'square';
       ctx.beginPath();

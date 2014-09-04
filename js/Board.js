@@ -86,11 +86,10 @@ TM.Board = (function() {
 
     render : function() {
       // render grid outlines
-      // (odd number linewidth requires 0.5px offset for clean lines)
-      this.drawGrid(10.5, 50.5);
+      this.drawGrid(9.5, 49.5);
 
       // render tiles
-      this.drawTiles(11, 51);
+      this.drawTiles(10, 50);
     },
 
     drawGrid : function(x, y) {
@@ -101,8 +100,8 @@ TM.Board = (function() {
       ctx.translate(x, y);
 
       for (; i < this.size + 1; i++) {
-        canvas.drawLine({ o : 'v', x : i * tileSize, y : this.size * tileSize });
-        canvas.drawLine({ o : 'h', x : this.size * tileSize, y : i * tileSize });
+        canvas.drawLine({ o : 'v', c : 'black', x : i * tileSize, y : this.size * tileSize });
+        canvas.drawLine({ o : 'h', c : 'black', x : this.size * tileSize, y : i * tileSize });
       }
 
       ctx.restore();

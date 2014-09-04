@@ -1,7 +1,8 @@
 TM.Screens = (function() {
   var canvas = TM.Canvas,
       board = TM.Board,
-      dungeon = TM.Dungeon;
+      dungeon = TM.Dungeon,
+      timer = TM.Timer;
 
   var Screens = {
     title : function() {
@@ -13,9 +14,10 @@ TM.Screens = (function() {
     },
 
     game : function() {
-      // dungeon.render();
       // canvas.drawImage(TM.images['scr_game'], 0, 0);
+      // dungeon.render();
       board.render();
+      timer.render();
     },
 
     gameover : function() {
