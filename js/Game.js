@@ -4,15 +4,19 @@ TM.Game = (function(w, d) {
       board = TM.Board,
       dungeon = TM.Dungeon,
       timer = TM.Timer,
-      particles = TM.Particles;
+      particles = TM.Particles,
+      audio = TM.Audio;
+
+window.audio = audio; // !!!
 
   var Game = {
     init : function() {
       var event;
 
-      board.init();
       canvas.init();
+      board.init();
       timer.init();
+      audio.init();
 
       event = new CustomEvent('gameStart');
       d.dispatchEvent(event);
@@ -59,7 +63,8 @@ TM.Game = (function(w, d) {
               // console.log('merge of ' + tile.spell);
               // board.animateMerge(tile, next);
 
-              timer.remove(4);
+              // audio.play('thud');
+              // timer.remove(4);
 
               board.removeTileAt(tile);
               board.removeTileAt(next);
