@@ -1,2 +1,4 @@
+/_assets
 /build
 /node_modules
+/tm.*

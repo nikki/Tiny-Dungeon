@@ -1,10 +1,11 @@
 TM.Screens = (function() {
+  var canvas = TM.Canvas,
+      board = TM.Board,
+      dungeon = TM.Dungeon;
 
   var Screens = {
-    current : 'title',
-
     title : function() {
-      Canvas.fillRect({ c : 'green', x : 0, y : 0, w : 40, h : 80 });
+      canvas.drawImage(TM.images['scr_title'], 0, 0);
     },
 
     tutorial : function() {
@@ -12,7 +13,9 @@ TM.Screens = (function() {
     },
 
     game : function() {
-
+      // dungeon.render();
+      // canvas.drawImage(TM.images['scr_game'], 0, 0);
+      board.render();
     },
 
     gameover : function() {
@@ -20,9 +23,6 @@ TM.Screens = (function() {
     }
   };
 
-
-  return {
-
-  }
+  return Screens;
 
 })();
