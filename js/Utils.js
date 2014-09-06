@@ -8,7 +8,11 @@ var TM = {
     't_earth',
     't_water',
     't_air',
-    't_fire'
+    't_fire',
+    'e_lasher',
+    'e_banshee',
+    'e_imp',
+    'e_frostgiant'
   ],
   currentScreen : 'game'
 },

@@ -7,7 +7,7 @@ TM.Screens = (function() {
 
   var Screens = {
     title : function() {
-      canvas.drawImage(TM.images['scr_title'], 0, 0);
+      canvas.drawImageScaled({ img : TM.images['scr_title'], x : 0, y : 0 });
     },
 
     tutorial : function() {
@@ -15,11 +15,11 @@ TM.Screens = (function() {
     },
 
     game : function() {
-      // canvas.drawImage(TM.images['scr_game'], 0, 0);
-      // dungeon.render();
-      board.render();
+      // hud
+      dungeon.render();
       timer.render();
-      particles.render();
+      board.render();
+      // particles.render();
     },
 
     gameover : function() {

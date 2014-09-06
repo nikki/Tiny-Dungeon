@@ -13,10 +13,11 @@ window.audio = audio; // !!!
     init : function() {
       var event;
 
-      canvas.init();
-      board.init();
-      timer.init();
       audio.init();
+      canvas.init();
+      dungeon.init();
+      timer.init();
+      board.init();
 
       event = new CustomEvent('gameStart');
       d.dispatchEvent(event);
@@ -31,9 +32,10 @@ window.audio = audio; // !!!
         ctx.clearRect(0, 0, TM.w, TM.h);
 
         // update
+        // hud
         dungeon.update(seconds);
-        board.update(seconds);
         timer.update(seconds);
+        board.update(seconds);
         particles.update(seconds);
         TWEEN.update();
 

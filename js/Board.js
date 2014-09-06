@@ -129,8 +129,8 @@ TM.Board = (function() {
       this.animatedTiles.push(tile);
       this.animatedTiles.push(next);
 
-      new TWEEN.Tween(tile.screenPos)
-          .to(next.screenPos, 100)
+      new TWEEN.Tween(tile.screen.pos)
+          .to(next.screen.pos, 100)
           .onComplete(function() {
             // if (callback) callback();
           })

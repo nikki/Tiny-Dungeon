@@ -48,12 +48,12 @@ TM.Timer = (function(d) {
 
     // penalty
     if (this.timePenalty) {
-      canvas.fillRect({ c : 'lightblue', x : 1, y : 1 + ((this.timePenalty.from + this.timePenalty.to) | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.elapsedTime | 0) * this.tick });
+      canvas.fillRect({ c : '#267AF6', x : 1, y : 1 + ((this.timePenalty.from + this.timePenalty.to) | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.elapsedTime | 0) * this.tick });
       canvas.fillRect({ c : 'red', x : 1, y : 1 + (this.timePenalty.from | 0) * this.tick, w : this.size.x - 2, h : (this.timePenalty.to | 0) * this.tick });
     }
 
     // time
-    canvas.fillRect({ c : 'lightblue', x : 1, y : 1 + (this.elapsedTime | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.elapsedTime | 0) * this.tick });
+    canvas.fillRect({ c : '#267AF6', x : 1, y : 1 + (this.elapsedTime | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.elapsedTime | 0) * this.tick });
 
     ctx.restore();
   };
