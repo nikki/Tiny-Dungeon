@@ -8,7 +8,10 @@ TM.Board = (function() {
       board = [];
 
   var Board = {
-    size : 4,
+    x : 10,
+    y : 50,
+    size : 5,
+
     numTiles : 0,
     isAnimated : false,
     animatedTiles : [],
@@ -19,7 +22,7 @@ TM.Board = (function() {
       for (x = 0; x < this.size; x++) {
         grid[x] = [];
         for (y = 0; y < this.size; y++) {
-          grid[x][y] = null;
+          grid[x][y] = new Tile({ x : x, y : y });
         }
       }
 
@@ -31,23 +34,26 @@ TM.Board = (function() {
       this.numTiles += 1;
     },
 
-    createRandomTile : function(n) {
-      var i = 0, r = utils.rand, p;
-
-      while (i < n) {
-        p = { x : r(0, 3), y : r(0, 3) };
-
-        if (!this.getTileAt(p)) {
-          this.createTileAt(p);
-          i++;
-        }
-      }
-    },
-
-    getTileAt : function(cell) {
+    getTileAtCell : function(cell) {
       if (this.cellInBounds(cell)) {
         return board[cell.x][cell.y];
       }
+      return null;
+    },
+
+    getTileAtScreenPos : function(pos) {
+      pos.x /= TM.s;
+      pos.y /= TM.s;
+
+      if (this.posInBounds(pos)) {
+        pos.x -= this.x;
+        pos.x /= tileSize;
+        pos.y -= this.y;
+        pos.y /= tileSize;
+
+        return this.getTileAtCell({ x : pos.x | 0, y : pos.y | 0 });
+      }
+
       return null;
     },
 
@@ -67,9 +73,14 @@ TM.Board = (function() {
              p.y >= 0 && p.y < this.size;
     },
 
+    posInBounds : function(p) {
+      return p.x >= this.x && p.x < this.x + (this.size * tileSize) &&
+             p.y >= this.y && p.y < this.y + (this.size * tileSize);
+    },
+
     init : function() {
       board = this.create();
-      this.createRandomTile(4);
+
     },
 
     update : function(seconds) {
@@ -86,10 +97,10 @@ TM.Board = (function() {
 
     render : function() {
       // render grid outlines
-      this.drawGrid(9.5, 49.5);
+      this.drawGrid(this.x - 0.5, this.y - 0.5);
 
       // render tiles
-      this.drawTiles(10, 50);
+      this.drawTiles(this.x, this.y);
     },
 
     drawGrid : function(x, y) {

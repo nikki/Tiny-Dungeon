@@ -6,10 +6,10 @@ TM.Tile = (function() {
   function Tile(p) {
     var _this = this;
 
-    this.type = utils.rand(0, 3);
+    this.type = utils.rand(0, 1);
     this.spell = spells[this.type];
     this.image = TM.images['t_' + this.spell];
-    this.size = 16;
+    this.size = 12;
     this.spacing = 1;
 
     if (!p) return; // for blank tile in board module
@@ -37,7 +37,13 @@ TM.Tile = (function() {
   };
 
   Tile.prototype.render = function() {
-    ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.screenSize.w, this.screenSize.h);
+    if (this.selected) {
+      ctx.globalAlpha = 0.5;
+      ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.screenSize.w, this.screenSize.h);
+      ctx.globalAlpha = 1;
+    } else {
+      ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.screenSize.w, this.screenSize.h);
+    }
   };
 
   Tile.prototype.setNewPos = function(p) {
