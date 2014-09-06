@@ -3,9 +3,9 @@ TM.Timer = (function(d) {
       event;
 
   function Timer() {
-    this.x = 0;
-    this.y = 0;
-    this.size = { x : 5, y : 69 };
+    this.x = 2;
+    this.y = 52;
+    this.size = { x : 8, y : 66 };
     this.maxTime = 60;
     this.startTime = null;
     this.elapsedTime = 0;
@@ -38,7 +38,7 @@ TM.Timer = (function(d) {
   Timer.prototype.render = function() {
     ctx.save();
     ctx.scale(TM.s, TM.s);
-    ctx.translate(2, 49);
+    ctx.translate(this.x, this.y);
 
     // outline
     canvas.fillRect({ c : 'white', x : 0, y : 0, w : this.size.x, h : this.size.y });

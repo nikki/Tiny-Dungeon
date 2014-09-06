@@ -8,12 +8,13 @@ TM.Dungeon = (function() {
     x : 2,
     y : 12,
     w : 76,
-    h : 35,
+    h : 38,
 
     walls : [],
 
     maxEnemies : 1,
     enemies : [],
+    currentEnemy : {},
 
     pos : 0,
     vel : 1000,
@@ -28,7 +29,6 @@ TM.Dungeon = (function() {
         _this.wait = true;
       }, 2000);
 */
-
 
       this.spawnEnemies();
     },
@@ -62,6 +62,8 @@ TM.Dungeon = (function() {
       }
 
       if (this.enemies.length < 1) this.spawnEnemies();
+
+      this.currentEnemy = this.enemies[0];
     },
 
     render : function() {

@@ -26,63 +26,58 @@ TM.Dom = (function(w, d) {
 
   var Dom = {
     init : function() {
-      var sx, sy, pressed = false;
+      var pressed = false,
+          touch = !!('ontouchstart' in window);
+
+      function getClientPos(e, maxTouches) {
+        var x, y;
+
+        if (TM.currentScreen !== 'game') return;
+        if (touch && e.touches) {
+          if (e.touches.length > maxTouches) return;
+          x = e[maxTouches ? 'touches' : 'changedTouches'][0].clientX;
+          y = e[maxTouches ? 'touches' : 'changedTouches'][0].clientY;
+        } else {
+          x = e.clientX;
+          y = e.clientY;
+        }
+
+        return { x : x, y : y };
+      }
 
       this.bind(d, 'DOMContentLoaded', utils.loadAllAssets.call(utils));
       this.bind(d, 'imagesLoaded', game.init);
       this.bind(d, 'gameStart', game.start);
       this.bind(d, 'gameEnd', game.end);
 
-      this.bind(c, 'mousedown', function(e) {
-        input.trigger('firstInChain', { x : e.layerX, y : e.layerY });
+      this.bind(d, 'mousedown touchstart', function(e) {
+        var p = getClientPos(e, 1);
+
+        if (TM.currentScreen !== 'game') {
+          TM.currentScreen = 'game';
+          return;
+        }
+
+        input.trigger('firstInChain', { x : p.x, y : p.y });
         pressed = true;
         e.preventDefault();
       });
 
-      this.bind(c, 'mousemove', function(e) {
-        if (pressed) {
-          input.trigger('nextInChain', { x : e.layerX, y : e.layerY });
-        }
+      this.bind(d, 'mousemove touchmove', function(e) {
+        var p = getClientPos(e, 1);
+
+        if (pressed) input.trigger('nextInChain', { x : p.x, y : p.y });
         e.preventDefault();
       });
 
-      this.bind(c, 'mouseup', function(e) {
-        input.trigger('lastInChain', { x : e.layerX, y : e.layerY });
+      this.bind(d, 'mouseup touchend', function(e) {
+        var p = getClientPos(e, 0);
+
+        input.trigger('lastInChain', { x : p.x, y : p.y });
         pressed = false;
         e.preventDefault();
       });
 
-
-/*
-      this.bind(d, 'touchstart', function(e) {
-        if (e.touches.length > 1) return;
-
-        sx = e.touches[0].clientX;
-        sy = e.touches[0].clientY;
-
-        e.preventDefault();
-      });
-
-      // touchmove
-
-      this.bind(d, 'touchend', function(e) {
-        var x, y, dX, dY;
-        if (e.touches.length > 0) return;
-
-        x = e.changedTouches[0].clientX;
-        y = e.changedTouches[0].clientY;
-        dx = x - sx;
-        dy = y - sy;
-        absDx = Math.abs(dx);
-        absDy = Math.abs(dy);
-
-        if (Math.max(absDx, absDy) > 10) {
-          input.trigger('move', absDx > absDy ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
-        }
-
-        e.preventDefault();
-      });
-*/
     },
 
     // bind dom events

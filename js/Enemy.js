@@ -1,22 +1,26 @@
 TM.Enemy = (function() {
   var r = TM.Utils.rand;
 
-  var enemies = [
+  var settings = [
     {
       name : 'lasher',
-      spell : 'earth'
+      spell : 'earth',
+      weakTo : 'air'
     },
     {
       name : 'imp',
-      spell : 'fire'
+      spell : 'fire',
+      weakTo : 'water'
     },
     {
       name : 'banshee',
-      spell : 'air'
+      spell : 'air',
+      weakTo : 'earth'
     },
     {
       name : 'frostgiant',
-      spell : 'water'
+      spell : 'water',
+      weakTo : 'fire'
     }/*,
     {
       name : 'tribble',
@@ -26,7 +30,6 @@ TM.Enemy = (function() {
 
   function Enemy(o) {
     this.fov = 60;
-    // this.depth = 100;
     this.depth = o.depth;
     this.step = 0.5;
     this.stepTimer = 0;
@@ -35,9 +38,10 @@ TM.Enemy = (function() {
     this.y = 0;
     this.z = this.depth;
 
-    this.type = r(0, enemies.length - 1);
-    this.name = enemies[this.type].name;
-    this.spell = enemies[this.type].spell;
+    this.type = r(0, settings.length - 1);
+    this.name = settings[this.type].name;
+    this.spell = settings[this.type].spell;
+    this.weakTo = settings[this.type].weakTo;
 
     this.level = o.level;
     this.health = 10;
@@ -48,7 +52,6 @@ TM.Enemy = (function() {
     this.w = this.image.width;
     this.h = this.image.height;
     this.attacking = false;
-
     this.dead = false;
   }
 

@@ -5,6 +5,7 @@ TM.Game = (function(w, d) {
       dungeon = TM.Dungeon,
       timer = TM.Timer,
       particles = TM.Particles,
+      spells = TM.Spells,
       audio = TM.Audio;
 
 window.audio = audio; // !!!
@@ -38,7 +39,7 @@ window.audio = audio; // !!!
         if (tile && tile !== this.currentTile && tile.type === this.currentTile.type) {
 
           // is this move a valid move?
-          if (this.validMove(this.currentTile, tile)) {
+          if (board.validMove(this.currentTile, tile)) {
 
             // this isn't a previous tile?
             previousTile = this.chain.filter(function(prev) {
@@ -49,7 +50,6 @@ window.audio = audio; // !!!
             if (previousTile.length) {
               undo = this.chain.indexOf(previousTile[0]);
               previousTile = this.chain.splice(undo, this.chain.length - undo);
-              console.log(previousTile);
               previousTile.forEach(function(tile) {
                 tile.selected = false;
               });
@@ -67,17 +67,25 @@ window.audio = audio; // !!!
       if (this.chain.length > 1) {
         // remove tiles
         this.chain.forEach(function(tile) {
-          board.removeTileAt(tile);
+          var cell = { x : tile.x, y : tile.y };
+          board.removeTileAt(cell);
         });
+
+        // cast spell
+        spells.create({
+          x : board.x,
+          y : board.y
+        }, this.currentTile, dungeon, this.chain.length);
+
+        // repopulate board
+        board.repopulate();
+      } else {
+        // deselect first tile
+        if (this.chain[0]) this.chain[0].selected = false;
       }
 
       // reset chain
       this.chain = [];
-    },
-
-    validMove : function(prev, next) {
-      return ((next.x === prev.x - 1 || next.x === prev.x + 1) && next.y === prev.y) ||
-             ((next.y === prev.y - 1 || next.y === prev.y + 1) && next.x === prev.x);
     },
 
     init : function() {
@@ -106,6 +114,7 @@ window.audio = audio; // !!!
         dungeon.update(seconds);
         timer.update(seconds);
         board.update(seconds);
+        spells.update(seconds);
         particles.update(seconds);
         TWEEN.update();
 

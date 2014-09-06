@@ -3,6 +3,7 @@ TM.Screens = (function() {
       board = TM.Board,
       dungeon = TM.Dungeon,
       particles = TM.Particles,
+      spells = TM.Spells,
       timer = TM.Timer;
 
   var Screens = {
@@ -19,6 +20,7 @@ TM.Screens = (function() {
       dungeon.render();
       timer.render();
       board.render();
+      spells.render();
       // particles.render();
     },
 

@@ -6,7 +6,7 @@ TM.Tile = (function() {
   function Tile(p) {
     var _this = this;
 
-    this.type = utils.rand(0, 1);
+    this.type = utils.rand(0, 3);
     this.spell = spells[this.type];
     this.image = TM.images['t_' + this.spell];
     this.size = 12;
@@ -15,21 +15,11 @@ TM.Tile = (function() {
     if (!p) return; // for blank tile in board module
     this.x = p.x;
     this.y = p.y;
-    this.screen = {};
 
-    this.screenPos = { x : p.x * (this.size + this.spacing) + this.size / 2, y : p.y * (this.size + this.spacing) + this.size / 2 };
+    this.screenPos = { x : p.x * (this.size + this.spacing), y : p.y * (this.size + this.spacing) };
     this.newPos = {};
-    this.screenSize = { w : 0, h : 0 };
 
-    new TWEEN.Tween(this.screenPos)
-      .to({ x : p.x * (this.size + this.spacing), y : p.y * (this.size + this.spacing) }, 200)
-      .easing(TWEEN.Easing.Back.Out)
-      .start();
-
-    new TWEEN.Tween(this.screenSize)
-      .easing(TWEEN.Easing.Back.Out)
-      .to({ w : _this.size, h : _this.size }, 200)
-      .start();
+    if (p.sY) this.setNewPos({ x : p.x, y : p.y, sY : p.sY });
   }
 
   Tile.prototype.update = function(seconds) {
@@ -39,10 +29,10 @@ TM.Tile = (function() {
   Tile.prototype.render = function() {
     if (this.selected) {
       ctx.globalAlpha = 0.5;
-      ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.screenSize.w, this.screenSize.h);
+      ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.size, this.size);
       ctx.globalAlpha = 1;
     } else {
-      ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.screenSize.w, this.screenSize.h);
+      ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.size, this.size);
     }
   };
 
@@ -52,6 +42,7 @@ TM.Tile = (function() {
     // update new pos
     this.x = p.x;
     this.y = p.y;
+    if (p.sY) _this.screenPos.y += p.sY * (this.size + this.spacing);
     this.newPos = { x : p.x * (this.size + this.spacing), y : p.y * (this.size + this.spacing) };
 
     // tween to new pos
