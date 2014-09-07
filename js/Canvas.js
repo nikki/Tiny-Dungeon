@@ -7,6 +7,8 @@ TM.Canvas = (function() {
       ctx.oImageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
+
+      ctx.font = '4px sans-serif';
     },
 
     drawImage : function(o) {

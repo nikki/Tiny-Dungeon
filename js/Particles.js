@@ -103,9 +103,15 @@ TM.Particles = (function() {
     render : function() {
       var i;
 
+      ctx.save();
+      ctx.scale(TM.s, TM.s);
+      // ctx.translate(0, 0);
+
       for (i = 0; i < this.emitters.length; i++) {
         this.emitters[i].render();
       }
+
+      ctx.restore();
     }
   };
 

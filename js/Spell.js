@@ -3,14 +3,15 @@ TM.Spell = (function() {
     var _this = this;
 
     this.p1 = { x : o.spell.x, y : o.spell.y };
-    this.p2 = { x : o.enemy.x, y : o.enemy.y };
+    // this.p2 = { x : o.enemy.x, y : o.enemy.y };
+    // this.p2 = staff position (fixed)
 
     this.strength = o.strength;
     this.lifeSpan = o.lifeSpan;
 
-    new TWEEN.Tween(_this.p1)
-        .to(_this.p2, _this.lifeSpan * 1000)
-        .start();
+    // new TWEEN.Tween(_this.p1)
+    //     .to(_this.p2, _this.lifeSpan * 1000)
+    //     .start();
   }
 
   Spell.prototype.update = function(seconds) {

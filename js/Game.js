@@ -71,11 +71,8 @@ window.audio = audio; // !!!
           board.removeTileAt(cell);
         });
 
-        // cast spell
-        spells.create({
-          x : board.x,
-          y : board.y
-        }, this.currentTile, dungeon, this.chain.length);
+        // enemy hit
+        dungeon.hitEnemy({ x : board.x, y : board.y }, this.currentTile, this.chain.length);
 
         // repopulate board
         board.repopulate();

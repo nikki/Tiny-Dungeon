@@ -23,10 +23,6 @@ TM.Particle = (function() {
   };
 
   Particle.prototype.render = function() {
-    ctx.save();
-    ctx.scale(TM.s, TM.s);
-    // ctx.translate(0, 0);
-
     canvas.fillRect({
       // c : 'rgba(255, 255, 255,' + this.alpha + ')',
       c : this.colour,
@@ -35,8 +31,6 @@ TM.Particle = (function() {
       w : this.size,
       h : this.size,
     });
-
-    ctx.restore();
   };
 
   return Particle;
