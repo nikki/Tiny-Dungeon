@@ -3,9 +3,8 @@ TM.Game = (function(w, d) {
       loop = TM.Loop,
       board = TM.Board,
       dungeon = TM.Dungeon,
-      timer = TM.Timer,
-      particles = TM.Particles,
       spells = TM.Spells,
+      particles = TM.Particles,
       audio = TM.Audio;
 
 window.audio = audio; // !!!
@@ -71,11 +70,20 @@ window.audio = audio; // !!!
           board.removeTileAt(cell);
         });
 
-        // enemy hit
-        dungeon.hitEnemy({ x : board.x, y : board.y }, this.currentTile, this.chain.length);
+        // cast the spell
+        dungeon.castSpell({ x : board.x, y : board.y }, this.currentTile, this.chain.length);
 
-        // repopulate board
-        board.repopulate();
+        // currently fighting enemy?
+        if (dungeon.wait) {
+          // hit enemy
+          dungeon.hitEnemy({ x : board.x, y : board.y }, this.currentTile, this.chain.length);
+        } else {
+          // matches += time
+          dungeon.gainTime(this.chain.length / 2); // 0.5 secs for each tile matched
+        }
+
+        // add more tiles to board
+        board.replaceMatchedTiles();
       } else {
         // deselect first tile
         if (this.chain[0]) this.chain[0].selected = false;
@@ -90,37 +98,38 @@ window.audio = audio; // !!!
 
       audio.init();
       canvas.init();
-      dungeon.init();
-      timer.init();
       board.init();
 
-      event = new CustomEvent('gameStart');
+      event = new CustomEvent('gameReady');
       d.dispatchEvent(event);
     },
 
-    transition : function(next) {
-      TM.currentScreen = next;
-    },
-
-    start : function() {
-      loop.start(function frame(seconds) {
+    ready : function() {
+      loop.start(function frame(seconds) { // start game loop
         ctx.clearRect(0, 0, TM.w, TM.h);
 
         // update
-        // hud
-        dungeon.update(seconds);
-        timer.update(seconds);
-        board.update(seconds);
-        spells.update(seconds);
-        particles.update(seconds);
-        TWEEN.update();
+        if (dungeon.player) {
+          // hud(?)
+          dungeon.update(seconds);
+          board.update(seconds);
+          spells.update(seconds);
+          particles.update(seconds);
+          TWEEN.update();
+        }
 
         // render
         TM.Screens[TM.currentScreen]();
       });
     },
 
+    start : function() {
+      TM.currentScreen = 'game';
+      dungeon.init();
+    },
+
     end : function() {
+
       TM.currentScreen = 'title';
     },
 

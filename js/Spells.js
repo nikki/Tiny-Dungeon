@@ -23,17 +23,8 @@ TM.Spells = (function() {
   var Spells = {
     spells : [],
 
-    create : function(boardPos, from, strength) {
-      var merge = {
-            spell : {
-              name : from.spell,
-              strength : strength,
-              x : boardPos.x + from.screenPos.x + (from.size / 2),
-              y : boardPos.y + from.screenPos.y + (from.size / 2)
-            }
-          },
-          options = utils.merge(settings[from.spell], merge);
-
+    create : function(o) {
+      var options = utils.merge(settings[o.name], o);
       this.spells.push(new Spell(options));
     },
 

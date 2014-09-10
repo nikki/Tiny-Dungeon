@@ -1,14 +1,13 @@
-TM.Timer = (function(d) {
-  var canvas = TM.Canvas,
-      event;
+TM.Timer = (function() {
+  var canvas = TM.Canvas;
 
   function Timer() {
-    this.x = 2;
+    this.x = 70;
     this.y = 52;
     this.size = { x : 8, y : 66 };
     this.maxTime = 60;
     this.startTime = null;
-    this.elapsedTime = 0;
+    this.time = 0;
     this.tick = (this.size.y / this.maxTime);
     this.timePenalty = null;
   };
@@ -19,19 +18,13 @@ TM.Timer = (function(d) {
 
   Timer.prototype.update = function(seconds) {
     if (this.startTime) {
-      this.elapsedTime += seconds;
+      this.time += seconds;
     }
 
     if (this.timePenalty) {
-      if (this.elapsedTime > this.timePenalty.end) {
+      if (this.time > this.timePenalty.end) {
         this.timePenalty = null;
       }
-    }
-
-    if (this.elapsedTime >= this.maxTime) {
-      // game over
-      event = new CustomEvent('gameEnd');
-      d.dispatchEvent(event);
     }
   };
 
@@ -48,33 +41,37 @@ TM.Timer = (function(d) {
 
     // penalty
     if (this.timePenalty) {
-      canvas.fillRect({ c : '#267AF6', x : 1, y : 1 + ((this.timePenalty.from + this.timePenalty.to) | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.elapsedTime | 0) * this.tick });
+      canvas.fillRect({ c : '#267AF6', x : 1, y : 1 + ((this.timePenalty.from + this.timePenalty.to) | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.time | 0) * this.tick });
       canvas.fillRect({ c : 'red', x : 1, y : 1 + (this.timePenalty.from | 0) * this.tick, w : this.size.x - 2, h : (this.timePenalty.to | 0) * this.tick });
     }
 
     // time
-    canvas.fillRect({ c : '#267AF6', x : 1, y : 1 + (this.elapsedTime | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.elapsedTime | 0) * this.tick });
+    canvas.fillRect({ c : '#267AF6', x : 1, y : 1 + (this.time | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.time | 0) * this.tick });
 
     ctx.restore();
   };
 
-  Timer.prototype.add = function(seconds) {
-    if ((this.elapsedTime - seconds) > 0) {
-      this.elapsedTime -= seconds;
+  Timer.prototype.add = function(seconds, callback) {
+    if ((this.time - seconds) > 0) {
+      this.time -= seconds;
     } else {
-      this.elapsedTime = 0;
+      this.time = 0;
     }
+
+    callback('+' + seconds + ' SECS');
   };
 
-  Timer.prototype.remove = function(seconds) {
+  Timer.prototype.remove = function(seconds, callback) {
     this.timePenalty = {
-      from : this.elapsedTime,
+      from : this.time,
       to : seconds,
-      end : this.elapsedTime + seconds + 0.8
+      end : this.time + seconds + 0.8
     };
-    this.elapsedTime += seconds;
+    this.time += seconds;
+
+    callback('- ' + seconds + ' secs');
   };
 
-  return new Timer;
+  return Timer;
 
-})(document);
+})();

@@ -5,6 +5,7 @@ TM.Input = (function(w, d) {
 
   var Input = {
     init : function() {
+      this.bind('start', game.start);
       this.bind('firstInChain', game.firstInChain);
       this.bind('nextInChain', game.nextInChain);
       this.bind('lastInChain', game.lastInChain);

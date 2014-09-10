@@ -1,10 +1,11 @@
-TM.Dungeon = (function() {
+TM.Dungeon = (function(d) {
   var canvas = TM.Canvas,
-      Wall = TM.Wall,
-      Enemy = TM.Enemy,
-      Text = TM.Text,
+      r = TM.Utils.rand,
       spells = TM.Spells,
-      r = TM.Utils.rand;
+      Player = TM.Player,
+      Enemy = TM.Enemy,
+      Wall = TM.Wall,
+      Text = TM.Text;
 
   var Dungeon = {
     x : 2,
@@ -12,58 +13,153 @@ TM.Dungeon = (function() {
     w : 76,
     h : 38,
 
+    player : null,
+    enemy : null,
     walls : [],
-    enemy : {},
     texts : [],
 
-    pos : 0,
-    vel : 1000,
     wait : false,
 
     init : function() {
-      this.walls.push(new Wall);
-
-/*
-      var _this = this;
-      setTimeout(function() {
-        _this.wait = true;
-      }, 2000);
-*/
-
+      this.spawnPlayer();
       this.spawnEnemy();
+      this.createWalls();
     },
 
-    spawnEnemy : function(d) {
-      this.enemy = new Enemy({ depth : 200, level : this.level });
+    spawnPlayer : function() {
+      this.player = new Player();
+    },
+
+    spawnEnemy : function() {
+      var enemy = new Enemy({ depth : 200, level : this.player.level });
+
+      if (this.enemy && this.enemy.type === enemy.type) {
+        return this.spawnEnemy();
+      }
+
+      this.enemy = enemy;
+    },
+
+    hitPlayer : function() {
+
     },
 
     hitEnemy : function(boardPos, tile, strength) {
       var _this = this;
 
-      // create spell effect
-      spells.create(boardPos, tile, strength);
+      // hit enemy
+      this.enemy.hit({ spell : tile.spell, strength : strength }, function(crit, dmg, text) {
+        // update crit stat
+        if (crit) _this.player.stats.update('highestCrit', { amount : dmg, enemy : _this.enemy.name });
 
-      // hit enemy, draw text on callback
-      this.enemy.hit({ spell : tile.spell, strength : strength }, function(damage) {
-        _this.texts.push(new Text({ x : _this.x + (_this.w / 4), y : _this.y + (_this.h / 4), text : damage }));
+        // draw damage text
+        _this.texts.push(new Text({ x : 2, y : 9, dY : 1, text : text }));
+      });
+    },
+
+    castSpell : function(boardPos, tile, strength) {
+      // create spell effect
+      spells.create({
+        name : tile.spell,
+        strength : strength,
+        x : boardPos.x + tile.screenPos.x + (tile.size / 2),
+        y : boardPos.y + tile.screenPos.y + (tile.size / 2)
+      });
+
+      // player cast animation
+      this.player.castAnimation();
+
+      // update spell chain stat
+      this.player.stats.update('longestSpellChain', strength);
+    },
+
+    gainTime : function(seconds) {
+      var _this = this;
+
+      this.player.health.add(seconds, function(text) {
+        _this.texts.push(new Text({ x : 52, y : 34, dY : 1, text : text }));
       });
     },
 
     createWalls : function() {
+      this.walls.push(new Wall({
+        x1 : 0,
+        y1 : 0,
+        w1 : this.w,
+        h1 : 0,
+        x2 : this.w/8,
+        y2 : this.h/8,
+        w2 : (this.w/4)*3,
+        h2 : 0,
+        c : 'red'
+      })); // top
 
+      this.walls.push(new Wall({
+        x1 : this.w/8,
+        y1 : this.h/8,
+        w1 : (this.w/4)*3,
+        h1 : 0,
+        x2 : this.w/4, // /4
+        y2 : this.h/4, // /4
+        w2 : this.w/2, // /2
+        h2 : 0,
+        c : 'pink'
+      })); // top x 2
+
+      this.walls.push(new Wall({
+        x1 : 0,
+        y1 : 0,
+        w1 : 0,
+        h1 : this.h,
+        x2 : this.w/4,
+        y2 : this.h/4,
+        w2 : 0,
+        h2 : this.h/2,
+        c : 'yellow'
+      })); // left
+
+      this.walls.push(new Wall({
+        x1 : 0,
+        y1 : this.h,
+        w1 : this.w,
+        h1 : 0,
+        x2 : this.w/4,
+        y2 : (this.h/4)*3,
+        w2 : this.w/2,
+        h2 : 0,
+        c : 'orange'
+      })); // bottom
+
+      this.walls.push(new Wall({
+        x1 : this.w,
+        y1 : 0,
+        w1 : 0,
+        h1 : this.h,
+        x2 : (this.w/4)*3,
+        y2 : (this.h/4),
+        w2 : 0,
+        h2 : this.h/2,
+        c : 'green'
+      })); // right
     },
 
     update : function(seconds) {
       var i, j;
 
-      // update dungeon pos
-      this.vel = this.wait ? 0 : 1000;
-      this.pos += this.vel;
+      // update player
+      if (this.player.health.time >= this.player.health.maxTime) {
+        // update total time survived
+        this.player.stats.update('totalTimeSurvived', ((+new Date() - this.player.health.startTime) / 1000) | 0);
 
-      // update walls
-      for (i = 0; i < this.walls.length; i++) {
-        this.walls[i].update(this.vel, seconds);
-        if (this.walls[i].dead) this.walls.splice(i, 1);
+        // destroy player
+        this.player = null;
+
+        // game over
+        event = new CustomEvent('gameEnd');
+        d.dispatchEvent(event);
+        return;
+      } else {
+        this.player.update(this.wait, seconds);
       }
 
       // met an enemy, wait camera position
@@ -73,14 +169,15 @@ TM.Dungeon = (function() {
       if (this.enemy.dead) {
         this.spawnEnemy();
         this.wait = false;
+        this.player.stats.update('totalEnemiesKilled', this.player.stats.totalEnemiesKilled + 1);
       } else {
-        this.enemy.update(this.vel, seconds);
+        this.enemy.update(this.player.currentVel, seconds);
       }
 
-      // update damage text
-      for (j = 0; j < this.texts.length; j++) {
-        this.texts[j].update(seconds);
-        if (this.texts[j].dead) this.texts.splice(j, 1);
+      // update walls
+      for (i = 0; i < this.walls.length; i++) {
+        this.walls[i].update(this.player.currentVel, seconds);
+        if (this.walls[i].dead) this.walls.splice(i, 1);
       }
     },
 
@@ -99,21 +196,28 @@ TM.Dungeon = (function() {
       // render walls front to back
       i = this.walls.length;
       while (i--) {
-        // this.walls[i].render(this.w, this.h);
+        this.walls[i].render(this.w, this.h);
       }
 
       // render current enemy
-      this.enemy.render(this.w, this.h);
+      this.enemy.render(this.wait, this.w, this.h);
+
+      // render player sprite
+      this.player.render();
 
       // render text
       for (j = 0; j < this.texts.length; j++) {
         this.texts[j].render();
       }
 
+      // restore context
       ctx.restore();
+
+      // render 'health' timer outside of dungeon view (really need to refactor this)
+      this.player.health.render();
     }
   };
 
   return Dungeon;
 
-})();
+})(document);

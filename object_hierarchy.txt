@@ -1,0 +1,22 @@
+Audio
+Canvas
+Dom
+Game // ties everything together ('Main')
+Input
+Loop
+Screens
+Timer
+Utils
+
+Board
+  Tile
+
+Dungeon
+  Player
+  Enemy
+  Wall
+  Spells
+    Spell
+  Particles
+    Emitter
+      Particle

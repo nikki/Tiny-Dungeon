@@ -2,10 +2,11 @@ TM.Spell = (function() {
   function Spell(o) {
     var _this = this;
 
-    this.p1 = { x : o.spell.x, y : o.spell.y };
+    this.p1 = { x : o.x, y : o.y };
     // this.p2 = { x : o.enemy.x, y : o.enemy.y };
     // this.p2 = staff position (fixed)
 
+    this.name = o.name;
     this.strength = o.strength;
     this.lifeSpan = o.lifeSpan;
 

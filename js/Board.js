@@ -1,6 +1,5 @@
 TM.Board = (function() {
-  var utils = TM.Utils,
-      canvas = TM.Canvas,
+  var canvas = TM.Canvas,
       Tile = TM.Tile;
 
   var tile = new Tile,
@@ -8,7 +7,7 @@ TM.Board = (function() {
       board = [];
 
   var Board = {
-    x : 13,
+    x : 3,
     y : 53,
     size : 5,
 
@@ -95,7 +94,7 @@ TM.Board = (function() {
       return prev;
     },
 
-    repopulate : function() {
+    replaceMatchedTiles : function() {
       var x, y, cell, tile, pos, sY = [];
 
       for (x = 0; x < this.size; x++) {

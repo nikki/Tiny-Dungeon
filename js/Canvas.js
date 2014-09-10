@@ -49,20 +49,14 @@ TM.Canvas = (function() {
     },
 
     polygon : function(o) {
-      // x1, y1, x2, y2, x3, y3, x4, y4, color
-
-      // ctx.fillStyle = o.c;
-      // ctx.beginPath();
-      // ctx.moveTo(o.x1, o.y1);
-      // ctx.lineTo(o.x2, o.y2);
-      // ctx.lineTo(o.x3, o.y3);
-      // ctx.lineTo(o.x4, o.y4);
-      // ctx.closePath();
-      // ctx.fill();
-    },
-
-    segment : function(x1, y1, w1, x2, y2, w2, c) {
-      // this.polygon(x1-w1, y1, x1+w1, y1, x2+w2, y2, x2-w2, y2, c);
+      ctx.fillStyle = o.c;
+      ctx.beginPath();
+      ctx.moveTo(o.x1, o.y1);
+      ctx.lineTo(o.x1 + o.w1, o.y1 + o.h1);
+      ctx.lineTo(o.x2 + o.w2, o.y2 + o.h2);
+      ctx.lineTo(o.x2, o.y2);
+      ctx.closePath();
+      ctx.fill();
     }
   };
 

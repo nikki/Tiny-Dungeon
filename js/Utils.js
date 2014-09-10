@@ -4,11 +4,12 @@ var TM = {
   s : 4,
   images : [
     'scr_title',
-    'scr_game',
     't_earth',
     't_water',
     't_air',
     't_fire',
+    'p_mage',
+    'p_staff',
     'e_lasher',
     'e_banshee',
     'e_imp',

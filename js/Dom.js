@@ -32,7 +32,6 @@ TM.Dom = (function(w, d) {
       function getClientPos(e, maxTouches) {
         var x, y;
 
-        if (TM.currentScreen !== 'game') return;
         if (touch && e.touches) {
           if (e.touches.length > maxTouches) return;
           x = e[maxTouches ? 'touches' : 'changedTouches'][0].clientX;
@@ -47,17 +46,27 @@ TM.Dom = (function(w, d) {
 
       this.bind(d, 'DOMContentLoaded', utils.loadAllAssets.call(utils));
       this.bind(d, 'imagesLoaded', game.init);
-      this.bind(d, 'gameStart', game.start);
+      this.bind(d, 'gameReady', game.ready);
       this.bind(d, 'gameEnd', game.end);
 
       this.bind(d, 'mousedown touchstart', function(e) {
         var p = getClientPos(e, 1);
 
-        if (TM.currentScreen !== 'game') {
-          TM.currentScreen = 'game';
-          return;
+        switch (TM.currentScreen) {
+          case 'title':
+            input.trigger('start');
+            return;
+          case 'tutorial':
+            break;
+          case 'game':
+            break;
+          case 'social':
+            // TM.currentScreen = 'game';
+          default:
+            break;
         }
 
+        if (TM.currentScreen !== 'game') return;
         input.trigger('firstInChain', { x : p.x, y : p.y });
         pressed = true;
         e.preventDefault();
@@ -66,6 +75,7 @@ TM.Dom = (function(w, d) {
       this.bind(d, 'mousemove touchmove', function(e) {
         var p = getClientPos(e, 1);
 
+        if (TM.currentScreen !== 'game') return;
         if (pressed) input.trigger('nextInChain', { x : p.x, y : p.y });
         e.preventDefault();
       });
@@ -73,6 +83,7 @@ TM.Dom = (function(w, d) {
       this.bind(d, 'mouseup touchend', function(e) {
         var p = getClientPos(e, 0);
 
+        if (TM.currentScreen !== 'game') return;
         input.trigger('lastInChain', { x : p.x, y : p.y });
         pressed = false;
         e.preventDefault();
