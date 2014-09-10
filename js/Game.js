@@ -1,5 +1,6 @@
 TM.Game = (function(w, d) {
-  var canvas = TM.Canvas,
+  var font = TM.Font,
+      canvas = TM.Canvas,
       loop = TM.Loop,
       board = TM.Board,
       dungeon = TM.Dungeon,
@@ -97,6 +98,7 @@ window.audio = audio; // !!!
       var event;
 
       audio.init();
+      font.init();
       canvas.init();
       board.init();
 

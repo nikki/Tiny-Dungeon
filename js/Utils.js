@@ -3,6 +3,7 @@ var TM = {
   h : 480,
   s : 4,
   images : [
+    'font',
     'scr_title',
     't_earth',
     't_water',

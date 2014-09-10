@@ -519,6 +519,14 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "js/Dungeon.js",
+			"settings":
+			{
+				"buffer_size": 5198,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "Packages/User/Jake.sublime-build",
 	"command_palette":
@@ -705,10 +713,24 @@
 	},
 	"expanded_folders":
 	[
-		"/Volumes/files/webserver/js-games/js13k"
+		"/Volumes/files/webserver/js-games/js13k",
+		"/Volumes/files/webserver/js-games/js13k/js"
 	],
 	"file_history":
 	[
+		"/Volumes/files/webserver/js-games/js13k/js/Enemy.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Stats.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Utils.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Player.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Timer.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Game.js",
+		"/Volumes/files/webserver/js-games/js13k/index.html",
+		"/Volumes/files/webserver/js-games/js13k/js/Spell.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Spells.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Text.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Board.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Screens.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Wall.js",
 		"/Volumes/files/webserver/websites/aviva/img/world_map.svg",
 		"/Volumes/files/webserver/websites/aviva/img/world_map_grouped.svg",
 		"/Volumes/files/webserver/websites/aviva/package.json",
@@ -723,27 +745,15 @@
 		"/Volumes/files/webserver/websites/aviva/bower.json",
 		"/Volumes/files/webserver/websites/aviva/.yo-rc.json",
 		"/Volumes/files/webserver/websites/aviva/npm-debug.log",
-		"/Volumes/files/webserver/js-games/js13k/js/Enemy.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Canvas.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Text.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Dungeon.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Game.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Screens.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Spell.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Particle.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Particles.js",
-		"/Volumes/files/webserver/js-games/js13k/index.html",
-		"/Volumes/files/webserver/js-games/js13k/js/Spells.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Texts.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Dom.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Utils.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Board.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Timer.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Input.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Tile.js",
 		"/Users/nikki/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
-		"/Volumes/files/webserver/js-games/js13k/js/Player.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Wall.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Emitter.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Audio.js",
 		"/Volumes/files/webserver/js-games/js13k/build/Jakefile",
@@ -835,12 +845,11 @@
 		"/Volumes/files/webserver/websites/manolo-blahnik/app/views/home/index.js.erb",
 		"/Volumes/files/webserver/websites/manolo-blahnik/app/assets/javascripts/stores.js.coffee",
 		"/Volumes/files/webserver/websites/manolo-blahnik/.gitignore",
-		"/Volumes/files/webserver/websites/manolo-blahnik/manolo-blahnik.sublime-project",
-		"/Volumes/files/webserver/js-games/match-3/lib/game/entities/button.js"
+		"/Volumes/files/webserver/websites/manolo-blahnik/manolo-blahnik.sublime-project"
 	],
 	"find":
 	{
-		"height": 26.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -910,6 +919,38 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"7",
+			"image",
+			"Image",
+			"image",
+			"200",
+			"In",
+			"easing",
+			"this",
+			"elapsedTime",
+			"event",
+			"gameEnd",
+			"spells",
+			"from",
+			"spells",
+			"enemy",
+			"o",
+			"attacking",
+			"damage",
+			"TWEEN",
+			"wait",
+			"this.vel",
+			"timer",
+			"spells",
+			"timer",
+			"damage",
+			"timer",
+			"spells",
+			"spawnE",
+			"timer",
+			"repo",
+			"repopul",
+			"cast",
 			"hover",
 			"fade",
 			"show",
@@ -1005,39 +1046,7 @@
 			"getTileAt",
 			"move",
 			" + this.size / 2",
-			"3",
-			"i",
-			"1, i",
-			"splice",
-			"walls",
-			"position",
-			"seconds",
-			" * 1.5",
-			"10",
-			"this.x",
-			"walls",
-			"Particle",
-			"Enemy",
-			"emitters",
-			"fov",
-			"this",
-			"Dungeon",
-			"Enemy",
-			"Dungeon",
-			"Out",
-			"Back",
-			"500",
-			"Elastic",
-			"Out",
-			"InOut",
-			"In",
-			"Back.Out",
-			"this.spacing",
-			"tile.",
-			"screenPos",
-			"this",
-			" * 1.5",
-			"this.settings"
+			"3"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -1183,8 +1192,39 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "js/Dungeon.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5198,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4295,
+								4295
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2901.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],

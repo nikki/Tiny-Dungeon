@@ -1,4 +1,6 @@
 TM.Canvas = (function() {
+  var font = TM.Font;
+
   var Canvas = {
     init : function() {
       // var prefixes = ['webkit', 'moz', 'o', ''];
@@ -24,12 +26,6 @@ TM.Canvas = (function() {
 
     },
 
-    // canvas.fillRect({ c : 'green', x : 0, y : 0, w : 40, h : 80 });
-    fillRect : function(o) {
-      ctx.fillStyle = o.c;
-      ctx.fillRect(o.x, o.y, o.w, o.h);
-    },
-
     drawLine : function(o) {
       ctx.strokeStyle = o.c;
       ctx.lineWidth = 1;
@@ -46,6 +42,26 @@ TM.Canvas = (function() {
       }
 
       ctx.stroke();
+    },
+
+    drawText : function(o) {
+      var f = font.getData(o.text), x, y, margin = 0;
+
+      ctx.save();
+      ctx.scale(TM.s, TM.s);
+
+      f.word.forEach(function(l, index) {
+        ctx.drawImage(f.buffer, l.x, l.y, l.w, l.h, o.x + margin, o.y, l.w, l.h);
+        margin += l.w;
+      });
+
+      ctx.restore();
+    },
+
+    // canvas.fillRect({ c : 'green', x : 0, y : 0, w : 40, h : 80 });
+    fillRect : function(o) {
+      ctx.fillStyle = o.c;
+      ctx.fillRect(o.x, o.y, o.w, o.h);
     },
 
     polygon : function(o) {

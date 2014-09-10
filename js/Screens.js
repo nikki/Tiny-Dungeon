@@ -7,7 +7,8 @@ TM.Screens = (function() {
 
   var Screens = {
     title : function() {
-      canvas.drawImageScaled({ img : TM.images['scr_title'], x : 0, y : 0 });
+      // canvas.drawImageScaled({ img : TM.images['scr_title'], x : 0, y : 0 });
+      canvas.drawText({ text : 'hello there', x : 10, y : 10 });
     },
 
     game : function() {
