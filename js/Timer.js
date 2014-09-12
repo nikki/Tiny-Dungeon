@@ -5,11 +5,14 @@ TM.Timer = (function() {
     this.x = 70;
     this.y = 52;
     this.size = { x : 8, y : 66 };
-    this.maxTime = 60;
+    this.maxTime = 5;
     this.startTime = null;
     this.time = 0;
     this.tick = (this.size.y / this.maxTime);
+    this.timeBonus = null;
     this.timePenalty = null;
+    this.paused = false;
+    this.pausedAt = null;
   };
 
   Timer.prototype.init = function() {
@@ -21,10 +24,12 @@ TM.Timer = (function() {
       this.time += seconds;
     }
 
-    if (this.timePenalty) {
-      if (this.time > this.timePenalty.end) {
-        this.timePenalty = null;
-      }
+    if (this.timePenalty && this.time > this.timePenalty.end) {
+      this.timePenalty = null;
+    }
+
+    if (this.timeBonus && this.time > this.timeBonus.end) {
+      this.timeBonus = null;
     }
   };
 
@@ -38,6 +43,12 @@ TM.Timer = (function() {
 
     // background
     canvas.fillRect({ c : 'black', x : 1, y : 1, w : this.size.x - 2, h : this.size.y - 2 });
+
+    // bonus
+    if (this.timeBonus) {
+      // canvas.fillRect({ c : '#267AF6', x : 1, y : 1 + ((this.timeBonus.from + this.timeBonus.to) | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.time | 0) * this.tick });
+      // canvas.fillRect({ c : 'green', x : 1, y : 1 + (this.timeBonus.from | 0) * this.tick, w : this.size.x - 2, h : (this.timeBonus.to | 0) * this.tick });
+    }
 
     // penalty
     if (this.timePenalty) {
@@ -71,6 +82,15 @@ TM.Timer = (function() {
 
     callback('- ' + seconds + ' secs');
   };
+
+  Timer.prototype.pause = function(p) {
+    this.paused = p;
+    if (this.paused) {
+      this.pausedAt = +new Date();
+    } else {
+      this.startTime += (+new Date() - this.pausedAt);
+    }
+  }
 
   return Timer;
 

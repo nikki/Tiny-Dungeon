@@ -27,9 +27,8 @@ TM.Text = (function() {
   }
 
   Text.prototype.render = function() {
-    ctx.fillStyle = 'blue';
     ctx.globalAlpha = this.alpha;
-    ctx.fillText(this.text, this.x, this.y);
+    canvas.drawText({ text : this.text, x : this.x, y : this.y });
     ctx.globalAlpha = 1;
   };
 

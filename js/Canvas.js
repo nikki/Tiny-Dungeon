@@ -10,11 +10,7 @@ TM.Canvas = (function() {
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
 
-      ctx.font = '4px sans-serif';
-    },
-
-    drawImage : function(o) {
-
+      ctx.globalCompositeOperation = 'source-over';
     },
 
     // canvas.drawImageScaled({ img : TM.images['scr_title'], x : 0, y : 0 });
@@ -23,7 +19,6 @@ TM.Canvas = (function() {
       ctx.scale(TM.s, TM.s);
       ctx.drawImage(o.img, o.x, o.y);
       ctx.restore();
-
     },
 
     drawLine : function(o) {
@@ -47,15 +42,10 @@ TM.Canvas = (function() {
     drawText : function(o) {
       var f = font.getData(o.text), x, y, margin = 0;
 
-      ctx.save();
-      ctx.scale(TM.s, TM.s);
-
       f.word.forEach(function(l, index) {
         ctx.drawImage(f.buffer, l.x, l.y, l.w, l.h, o.x + margin, o.y, l.w, l.h);
         margin += l.w;
       });
-
-      ctx.restore();
     },
 
     // canvas.fillRect({ c : 'green', x : 0, y : 0, w : 40, h : 80 });

@@ -184,17 +184,7 @@ TM.Board = (function() {
       ctx.restore();
     },
 
-    animateMerge: function(tile, next, callback) {
-      this.animatedTiles.push(tile);
-      this.animatedTiles.push(next);
-
-      new TWEEN.Tween(tile.screen.pos)
-          .to(next.screen.pos, 100)
-          .onComplete(function() {
-            // if (callback) callback();
-          })
-          .start();
-    }
+    flipTiles : false
   };
 
   return Board;

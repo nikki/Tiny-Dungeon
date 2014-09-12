@@ -2,6 +2,7 @@ TM.Dungeon = (function(d) {
   var canvas = TM.Canvas,
       r = TM.Utils.rand,
       spells = TM.Spells,
+      audio = TM.Audio,
       Player = TM.Player,
       Enemy = TM.Enemy,
       Wall = TM.Wall,
@@ -13,16 +14,21 @@ TM.Dungeon = (function(d) {
     w : 76,
     h : 38,
 
+    stats : null,
     player : null,
     enemy : null,
     walls : [],
     texts : [],
 
-    wait : false,
-
     init : function() {
+      this.stats = null;
+
+      this.player = null;
       this.spawnPlayer();
+
+      this.enemy = null;
       this.spawnEnemy();
+
       this.createWalls();
     },
 
@@ -41,7 +47,8 @@ TM.Dungeon = (function(d) {
     },
 
     hitPlayer : function() {
-
+      // play audio
+      // audio.play('thud');
     },
 
     hitEnemy : function(boardPos, tile, strength) {
@@ -55,6 +62,9 @@ TM.Dungeon = (function(d) {
         // draw damage text
         _this.texts.push(new Text({ x : 2, y : 9, dY : 1, text : text }));
       });
+
+      // play audio
+      audio.play(tile.spell);
     },
 
     castSpell : function(boardPos, tile, strength) {
@@ -76,9 +86,12 @@ TM.Dungeon = (function(d) {
     gainTime : function(seconds) {
       var _this = this;
 
-      this.player.health.add(seconds, function(text) {
+      TM.timer.add(seconds, function(text) {
         _this.texts.push(new Text({ x : 52, y : 34, dY : 1, text : text }));
       });
+
+      // play audio
+      // audio.play('ping');
     },
 
     createWalls : function() {
@@ -147,29 +160,36 @@ TM.Dungeon = (function(d) {
       var i, j;
 
       // update player
-      if (this.player.health.time >= this.player.health.maxTime) {
+      if (TM.timer.time >= TM.timer.maxTime) {
         // update total time survived
-        this.player.stats.update('totalTimeSurvived', ((+new Date() - this.player.health.startTime) / 1000) | 0);
+        this.player.stats.update('totalTimeSurvived', ((+new Date() - TM.timer.startTime) / 1000) | 0);
+
+        // game over
+        this.stats = this.player.stats;
+        event = new CustomEvent('gameEnd');
+        d.dispatchEvent(event);
 
         // destroy player
         this.player = null;
-
-        // game over
-        event = new CustomEvent('gameEnd');
-        d.dispatchEvent(event);
+        // TM.timer = null;
         return;
       } else {
-        this.player.update(this.wait, seconds);
+        this.player.update(seconds);
+
+        // console.log(this.player.stepTimer);
+
+        // walk noise
+        // audio.play('walk');
       }
 
       // met an enemy, wait camera position
-      if (this.enemy.z < this.enemy.fov / 2) this.wait = true;
+      if (this.enemy.z < this.enemy.fov / 2) TM.wait = true;
 
       // update enemy
       if (this.enemy.dead) {
         this.spawnEnemy();
-        this.wait = false;
         this.player.stats.update('totalEnemiesKilled', this.player.stats.totalEnemiesKilled + 1);
+        TM.wait = false;
       } else {
         this.enemy.update(this.player.currentVel, seconds);
       }
@@ -183,6 +203,10 @@ TM.Dungeon = (function(d) {
 
     render : function() {
       var i, j;
+
+      /**
+       * Full scale
+       */
 
       ctx.save();
       ctx.scale(TM.s, TM.s);
@@ -200,21 +224,34 @@ TM.Dungeon = (function(d) {
       }
 
       // render current enemy
-      this.enemy.render(this.wait, this.w, this.h);
+      this.enemy.render(this.w, this.h);
 
       // render player sprite
       this.player.render();
 
-      // render text
+      // restore context
+      ctx.restore();
+
+
+      /**
+       * Half scale
+       */
+
+      // half scale for text (not ideal but nvm)
+      ctx.save();
+      ctx.scale(2, 2);
+
+      // render text at half scale
       for (j = 0; j < this.texts.length; j++) {
         this.texts[j].render();
       }
 
-      // restore context
-      ctx.restore();
+      // draw half-scaled (ie. 4px) enemy nameplate - it's the only way it'll fit
+      if (TM.wait) {
+        canvas.drawText({ text : (this.enemy.name).toUpperCase(), x : 2 * (this.x + this.w / 2), y : 2 * (this.y + this.h - 6) });
+      }
 
-      // render 'health' timer outside of dungeon view (really need to refactor this)
-      this.player.health.render();
+      ctx.restore();
     }
   };
 

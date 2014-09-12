@@ -6,9 +6,8 @@ TM.Game = (function(w, d) {
       dungeon = TM.Dungeon,
       spells = TM.Spells,
       particles = TM.Particles,
-      audio = TM.Audio;
-
-window.audio = audio; // !!!
+      audio = TM.Audio,
+      Timer = TM.Timer;
 
   var Game = {
     currentTile : {},
@@ -75,7 +74,7 @@ window.audio = audio; // !!!
         dungeon.castSpell({ x : board.x, y : board.y }, this.currentTile, this.chain.length);
 
         // currently fighting enemy?
-        if (dungeon.wait) {
+        if (TM.wait) {
           // hit enemy
           dungeon.hitEnemy({ x : board.x, y : board.y }, this.currentTile, this.chain.length);
         } else {
@@ -100,7 +99,6 @@ window.audio = audio; // !!!
       audio.init();
       font.init();
       canvas.init();
-      board.init();
 
       event = new CustomEvent('gameReady');
       d.dispatchEvent(event);
@@ -112,11 +110,11 @@ window.audio = audio; // !!!
 
         // update
         if (dungeon.player) {
-          // hud(?)
           dungeon.update(seconds);
           board.update(seconds);
           spells.update(seconds);
           particles.update(seconds);
+          TM.timer.update(seconds);
           TWEEN.update();
         }
 
@@ -127,16 +125,25 @@ window.audio = audio; // !!!
 
     start : function() {
       TM.currentScreen = 'game';
+      $('.social').style.display = 'none';
+
+      TM.timer = new Timer;
+      TM.timer.init();
+      TM.wait = false;
+      board.init();
       dungeon.init();
     },
 
-    end : function() {
-
-      TM.currentScreen = 'title';
+    pause : function(hidden) {
+      if (TM.currentScreen !== 'game') return;
+      if (hidden) audio.play('stun');
+      TM.timer.pause(hidden);
     },
 
-    quit : function() {
-
+    end : function() {
+      TM.currentScreen = 'social';
+      TM.Screens.statsX = 0;
+      $('.social').style.display = 'block';
     }
   };
 

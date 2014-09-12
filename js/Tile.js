@@ -1,7 +1,11 @@
 TM.Tile = (function() {
   var utils = TM.Utils;
 
-  var spells = ['earth', 'water', 'air', 'fire'];
+  var spells = ['earth', 'water', 'air', 'fire'],
+      blend = (function() {
+        ctx.globalCompositeOperation = 'screen';
+        return ctx.globalCompositeOperation === 'screen';
+      })();
 
   function Tile(p) {
     var _this = this;
@@ -22,17 +26,26 @@ TM.Tile = (function() {
     if (p.sY) this.setNewPos({ x : p.x, y : p.y, sY : p.sY });
   }
 
-  Tile.prototype.update = function(seconds) {
-
-  };
+  Tile.prototype.update = function(seconds) {};
 
   Tile.prototype.render = function() {
     if (this.selected) {
-      ctx.globalAlpha = 0.5;
-      ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.size, this.size);
-      ctx.globalAlpha = 1;
+      if (blend) {
+        ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.size, this.size);
+        ctx.globalCompositeOperation = 'screen';
+        ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.size, this.size);
+        ctx.globalCompositeOperation = 'source-over';
+      } else {
+        ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.size, this.size);
+      }
     } else {
-      ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.size, this.size);
+      if (blend) {
+        ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.size, this.size);
+      } else {
+        ctx.globalAlpha = 0.75;
+        ctx.drawImage(this.image, this.screenPos.x, this.screenPos.y, this.size, this.size);
+        ctx.globalAlpha = 1;
+      }
     }
   };
 

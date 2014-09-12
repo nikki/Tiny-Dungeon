@@ -93,13 +93,13 @@ TM.Enemy = (function() {
     if (this.health <= 0) this.dead = true;
   };
 
-  Enemy.prototype.render = function(waiting, sw, sh) {
+  Enemy.prototype.render = function(sw, sh) {
     var scale = this.fov / (this.fov + this.z);
     var x = (this.x * scale) + (sw / 2);
     var y = (this.y * scale) + (sh / 2);
 
     // attacking?
-    this.attacking = waiting;
+    this.attacking = TM.wait;
 
     // alive?
     if (!this.dead) {

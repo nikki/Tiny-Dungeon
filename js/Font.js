@@ -15,11 +15,13 @@ TM.Font = (function() {
       buffer.drawImage(img, 0, 0, w, h);
       data = buffer.getImageData(0, 0, w, h).data;
 
+      // iterate over image pixel data
       for (i = 0; i < data.length; i += 4) {
         x = ((i / 4) % w) | 0;
         y = ((i / 4) / w) | 0;
 
         // y pos is 8, alpha pixel is transparent
+        // (looking for the bar along the bottom of each char)
         if (y === (h - 1) && !data[i + 3]) {
           chars.push({
             x : lastX,

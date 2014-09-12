@@ -14,7 +14,8 @@
         padding: 0;
         font-size: 12pt;
       }
-      #c {
+
+      #c, .social {
         position: absolute;
         left: 0;
         right: 0;
@@ -23,11 +24,48 @@
         margin: auto;
         background: gray;
       }
+
+      .social {
+        width: 320px;
+        height: 480px;
+        display: none;
+        background: none;
+      }
+
+      a {
+        position: absolute;
+        display: block;
+        height: 60px;
+        text-indent: -9999px;
+      }
+
+      a.tweet {
+        top: 236px;
+        left: 8px;
+        width: 148px;
+      }
+
+      a.share {
+        top: 236px;
+        left: 164px;
+        width: 148px;
+      }
+
+      a.again {
+        top: 304px;
+        left: 8px;
+        width: 304px;
+      }
     </style>
 </head>
 <body>
 
   <canvas id="c" width="320" height="480"></canvas>
+  <div class="social">
+    <a href="#" class="tweet">Tweet</a>
+    <a href="#" class="share">Share</a>
+    <a href="#" class="again">Play Again</a>
+  </div>
 
   <script src="js/lib/Tween.js"></script>
   <script src="js/lib/jsfxr.js"></script>

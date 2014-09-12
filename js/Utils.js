@@ -4,7 +4,6 @@ var TM = {
   s : 4,
   images : [
     'font',
-    'scr_title',
     't_earth',
     't_water',
     't_air',
@@ -16,7 +15,9 @@ var TM = {
     'e_imp',
     'e_frostgiant'
   ],
-  currentScreen : 'title'
+  currentScreen : 'title',
+  timer : null,
+  wait : false
 },
 
 $ = function(selector) {

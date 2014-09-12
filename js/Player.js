@@ -1,6 +1,5 @@
 TM.Player = (function() {
-  var Timer = TM.Timer,
-      Stats = TM.Stats;
+  var Stats = TM.Stats;
 
   function Player() {
     this.pos = 0; // dungeon pos
@@ -24,17 +23,13 @@ TM.Player = (function() {
     this.sh = this.staff.height;
     this.rotate = 0;
 
-    // timer === health => take damage -= time
-    this.health = new Timer;
-    this.health.init();
-
     // stats
     this.stats = new Stats;
   }
 
-  Player.prototype.update = function(waiting, seconds) {
+  Player.prototype.update = function(seconds) {
     // update dungeon pos
-    this.defending = waiting;
+    this.defending = TM.wait;
     this.currentVel = this.defending ? 0 : this.baseVel;
     this.pos += this.currentVel;
 
@@ -43,9 +38,6 @@ TM.Player = (function() {
     if (this.stepTimer >= this.step * 2 || this.defending) {
       this.stepTimer = 0;
     }
-
-    // update 'health'
-    this.health.update(seconds);
   };
 
   Player.prototype.render = function() {

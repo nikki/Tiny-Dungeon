@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"pause",
+				"pausedFor"
+			],
+			[
 				"tween",
 				"tweenViewBox"
 			],
@@ -510,20 +514,74 @@
 			[
 				"su",
 				"surfaceImage"
-			],
-			[
-				"de",
-				"default"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"file": "js/Board.js",
+			"settings":
+			{
+				"buffer_size": 4348,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "js/Dungeon.js",
 			"settings":
 			{
-				"buffer_size": 5198,
+				"buffer_size": 5884,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Searching 142 files for \"timer\"\n\n/Volumes/files/webserver/js-games/js13k/index.html:\n   79    <script src=\"js/Board.js\"></script>\n   80  \n   81:   <script src=\"js/Timer.js\"></script>\n   82    <script src=\"js/Stats.js\"></script>\n   83    <script src=\"js/Player.js\"></script>\n\n/Volumes/files/webserver/js-games/js13k/object_hierarchy.txt:\n    6  Loop\n    7  Screens\n    8: Timer\n    9  Utils\n   10  \n\n/Volumes/files/webserver/js-games/js13k/build/Jakefile:\n   11        '../js/Tile.js',\n   12        '../js/Board.js',\n   13:       '../js/Timer.js',\n   14        '../js/Stats.js',\n   15        '../js/Player.js',\n\nUnable to open /Volumes/files/webserver/js-games/js13k/js/.afpDeleted1596203\n/Volumes/files/webserver/js-games/js13k/js/Dungeon.js:\n   87        var _this = this;\n   88  \n   89:       TM.timer.add(seconds, function(text) {\n   90          _this.texts.push(new Text({ x : 52, y : 34, dY : 1, text : text }));\n   91        });\n   ..\n  161  \n  162        // update player\n  163:       if (TM.timer.time >= TM.timer.maxTime) {\n  164          // update total time survived\n  165:         this.player.stats.update('totalTimeSurvived', ((+new Date() - TM.timer.startTime) / 1000) | 0);\n  166  \n  167          // game over\n  ...\n  172          // destroy player\n  173          this.player = null;\n  174:         TM.timer = null;\n  175          return;\n  176        } else {\n  177          this.player.update(seconds);\n  178  \n  179:         // console.log(this.player.stepTimer);\n  180  \n  181          // walk noise\n\n/Volumes/files/webserver/js-games/js13k/js/Enemy.js:\n   33      this.depth = o.depth;\n   34      this.step = 0.25;\n   35:     this.stepTimer = 0;\n   36  \n   37      this.x = 0;\n   ..\n   84    Enemy.prototype.update = function(vel, seconds) {\n   85      // position update\n   86:     this.stepTimer += seconds;\n   87:     if (this.stepTimer > this.step) {\n   88        this.z -= vel * seconds;\n   89:       this.stepTimer = 0;\n   90      }\n   91  \n\n/Volumes/files/webserver/js-games/js13k/js/Game.js:\n    8        particles = TM.Particles,\n    9        audio = TM.Audio,\n   10:       Timer = TM.Timer;\n   11  \n   12    var Game = {\n   ..\n  100        font.init();\n  101        canvas.init();\n  102:       TM.timer = new Timer;\n  103  \n  104        event = new CustomEvent('gameReady');\n  ...\n  116            spells.update(seconds);\n  117            particles.update(seconds);\n  118:           TM.timer.update(seconds);\n  119            TWEEN.update();\n  120          }\n  ...\n  129        $('.social').style.display = 'none';\n  130  \n  131:       TM.timer.init();\n  132        board.init();\n  133        dungeon.init();\n  ...\n  137        if (TM.currentScreen !== 'game') return;\n  138        if (hidden) audio.play('stun');\n  139:       TM.timer.pause(hidden);\n  140      },\n  141  \n\n/Volumes/files/webserver/js-games/js13k/js/Player.js:\n    1  TM.Player = (function() {\n    2:   var Timer = TM.Timer,\n    3        Stats = TM.Stats;\n    4  \n    .\n    9  \n   10      this.step = 0.25;\n   11:     this.stepTimer = 0; // head bob\n   12      this.defending = false;\n   13  \n   ..\n   36  \n   37      // headbob\n   38:     this.stepTimer += seconds;\n   39:     if (this.stepTimer >= this.step * 2 || this.defending) {\n   40:       this.stepTimer = 0;\n   41      }\n   42    };\n   ..\n   45      if (!this.defending) {\n   46        // draw mage\n   47:       ctx.drawImage(this.mage, this.mx, this.my + (this.stepTimer >= this.step ? 1 : 0), this.mw, this.mh);\n   48  \n   49      } else {\n   ..\n   53          ctx.translate(0, this.h);\n   54          ctx.rotate(this.rotate * Math.PI / 180);\n   55:         ctx.drawImage(this.staff, this.sx + this.rotate, (this.sy - this.rotate) + (this.stepTimer >= this.step ? 1 : 0), this.sw, this.sh);\n   56          ctx.restore();\n   57        } else {\n   58:         ctx.drawImage(this.staff, this.sx, this.sy + (this.stepTimer >= this.step ? 1 : 0), this.sw, this.sh);\n   59        }\n   60      }\n\n/Volumes/files/webserver/js-games/js13k/js/Screens.js:\n   26        spells.render();\n   27        // particles.render();\n   28:       TM.timer.render();\n   29      },\n   30  \n\n/Volumes/files/webserver/js-games/js13k/js/Timer.js:\n    <binary>\n\n/Volumes/files/webserver/js-games/js13k/js/Utils.js:\n   17    ],\n   18    currentScreen : 'title',\n   19:   timer : null,\n   20    wait : false\n   21  },\n\n/Volumes/files/webserver/js-games/js13k/js/Wall.js:\n    6      this.depth = 100;\n    7      this.step = 0.5;\n    8:     this.stepTimer = 0;\n    9  \n   10      this.x = o.x;\n   ..\n   28  \n   29    Wall.prototype.update = function(vel, seconds) {\n   30:     this.stepTimer += seconds;\n   31:     if (this.stepTimer > this.step) {\n   32        this.z -= vel * seconds;\n   33:       this.stepTimer = 0;\n   34      }\n   35    };\n\n/Volumes/files/webserver/js-games/js13k/node_modules/uglify-js/tmp/app.js:\n 7109  			transport,\n 7110  			// timeout handle\n 7111: 			timeoutTimer,\n 7112  			// Cross-domain detection vars\n 7113  			parts,\n ....\n 7186  \n 7187  			// Clear timeout if it exists\n 7188: 			if ( timeoutTimer ) {\n 7189: 				clearTimeout( timeoutTimer );\n 7190  			}\n 7191  \n ....\n 7433  			// Timeout\n 7434  			if ( s.async && s.timeout > 0 ) {\n 7435: 				timeoutTimer = setTimeout( function(){\n 7436  					jqXHR.abort( \"timeout\" );\n 7437  				}, s.timeout );\n ....\n 8082  	rfxtypes = /^(?:toggle|show|hide)$/,\n 8083  	rfxnum = /^([+\\-]=)?([\\d+.\\-]+)([a-z%]*)$/i,\n 8084: 	timerId,\n 8085  	fxAttrs = [\n 8086  		// height animations\n ....\n 8327  \n 8328  		this.each(function() {\n 8329: 			var timers = jQuery.timers,\n 8330: 				i = timers.length;\n 8331  			// clear marker counters if we know they won't be\n 8332  			if ( !gotoEnd ) {\n ....\n 8334  			}\n 8335  			while ( i-- ) {\n 8336: 				if ( timers[i].elem === this ) {\n 8337  					if (gotoEnd) {\n 8338  						// force the next step to be the last\n 8339: 						timers[i](true);\n 8340  					}\n 8341  \n 8342: 					timers.splice(i, 1);\n 8343  				}\n 8344  			}\n ....\n 8428  	},\n 8429  \n 8430: 	timers: [],\n 8431  \n 8432  	fx: function( elem, options, prop ) {\n ....\n 8482  		t.elem = this.elem;\n 8483  \n 8484: 		if ( t() && jQuery.timers.push(t) && !timerId ) {\n 8485: 			timerId = setInterval( fx.tick, fx.interval );\n 8486  		}\n 8487  	},\n ....\n 8582  jQuery.extend( jQuery.fx, {\n 8583  	tick: function() {\n 8584: 		for ( var timers = jQuery.timers, i = 0 ; i < timers.length ; ++i ) {\n 8585: 			if ( !timers[i]() ) {\n 8586: 				timers.splice(i--, 1);\n 8587  			}\n 8588  		}\n 8589  \n 8590: 		if ( !timers.length ) {\n 8591  			jQuery.fx.stop();\n 8592  		}\n ....\n 8596  \n 8597  	stop: function() {\n 8598: 		clearInterval( timerId );\n 8599: 		timerId = null;\n 8600  	},\n 8601  \n ....\n 8624  if ( jQuery.expr && jQuery.expr.filters ) {\n 8625  	jQuery.expr.filters.animated = function( elem ) {\n 8626: 		return jQuery.grep(jQuery.timers, function( fn ) {\n 8627  			return elem === fn.elem;\n 8628  		}).length;\n\n64 matches across 12 files\n",
+			"settings":
+			{
+				"buffer_size": 6934,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "js/Canvas.js",
+			"settings":
+			{
+				"buffer_size": 1746,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "js/Player.js",
+			"settings":
+			{
+				"buffer_size": 2106,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "js/Enemy.js",
+			"settings":
+			{
+				"buffer_size": 2823,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "js/Game.js",
+			"settings":
+			{
+				"buffer_size": 3761,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "js/Timer.js",
+			"settings":
+			{
+				"buffer_size": 2761,
 				"line_ending": "Unix"
 			}
 		}
@@ -714,22 +772,31 @@
 	"expanded_folders":
 	[
 		"/Volumes/files/webserver/js-games/js13k",
+		"/Volumes/files/webserver/js-games/js13k/build",
 		"/Volumes/files/webserver/js-games/js13k/js"
 	],
 	"file_history":
 	[
-		"/Volumes/files/webserver/js-games/js13k/js/Enemy.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Stats.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Dom.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Input.js",
+		"/Volumes/files/webserver/js-games/js13k/build/Jakefile",
 		"/Volumes/files/webserver/js-games/js13k/js/Utils.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Audio.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Stats.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Screens.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Enemy.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Player.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Timer.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Game.js",
 		"/Volumes/files/webserver/js-games/js13k/index.html",
+		"/Volumes/files/webserver/js-games/js13k/js/Game.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Dungeon.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Canvas.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Tile.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Font.js",
+		"/Volumes/files/webserver/js-games/js13k/js/Text.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Spell.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Spells.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Text.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Board.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Screens.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Wall.js",
 		"/Volumes/files/webserver/websites/aviva/img/world_map.svg",
 		"/Volumes/files/webserver/websites/aviva/img/world_map_grouped.svg",
@@ -745,18 +812,11 @@
 		"/Volumes/files/webserver/websites/aviva/bower.json",
 		"/Volumes/files/webserver/websites/aviva/.yo-rc.json",
 		"/Volumes/files/webserver/websites/aviva/npm-debug.log",
-		"/Volumes/files/webserver/js-games/js13k/js/Canvas.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Dungeon.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Particle.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Particles.js",
 		"/Volumes/files/webserver/js-games/js13k/js/Texts.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Dom.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Input.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Tile.js",
 		"/Users/nikki/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/Volumes/files/webserver/js-games/js13k/js/Emitter.js",
-		"/Volumes/files/webserver/js-games/js13k/js/Audio.js",
-		"/Volumes/files/webserver/js-games/js13k/build/Jakefile",
 		"/Volumes/files/webserver/js-games/js13k/js/Camera.js",
 		"/Volumes/files/webserver/js-games/js13k/node_modules/uglify-js/lib/object-ast.js",
 		"/Volumes/files/webserver/js-games/js13k/js/lib/jsfxr.js",
@@ -844,8 +904,7 @@
 		"/Volumes/files/webserver/websites/manolo-blahnik/app/controllers/stores_controller.rb",
 		"/Volumes/files/webserver/websites/manolo-blahnik/app/views/home/index.js.erb",
 		"/Volumes/files/webserver/websites/manolo-blahnik/app/assets/javascripts/stores.js.coffee",
-		"/Volumes/files/webserver/websites/manolo-blahnik/.gitignore",
-		"/Volumes/files/webserver/websites/manolo-blahnik/manolo-blahnik.sublime-project"
+		"/Volumes/files/webserver/websites/manolo-blahnik/.gitignore"
 	],
 	"find":
 	{
@@ -919,6 +978,57 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"timer",
+			"wait",
+			"timer",
+			"time",
+			"health",
+			"wait",
+			"health",
+			"wait",
+			"timer",
+			"health",
+			"timer",
+			"wait",
+			"this.timer",
+			"health",
+			"timer",
+			"health",
+			"this.player.health",
+			"health",
+			"stats",
+			"health",
+			"timer",
+			"lastInChain",
+			"doc",
+			"      max : 5,",
+			"gainTime",
+			"audio",
+			"Penalty",
+			"timePenalty",
+			"screens",
+			"stats",
+			"screens",
+			"62",
+			"57",
+			"52",
+			"10",
+			"drawTextScaled",
+			"Scaled",
+			"drawTextScaled",
+			"555",
+			"55",
+			"5",
+			"55",
+			"555",
+			"drawImageSca",
+			"touchstart",
+			"event",
+			"10",
+			"0",
+			"this.image",
+			"draw",
+			"ctx",
 			"7",
 			"image",
 			"Image",
@@ -995,58 +1105,7 @@
 			"walls",
 			"damage",
 			"baseDamage",
-			"this",
-			"texts",
-			"i",
-			"scale",
-			"to",
-			"lifeSpa",
-			"emitters",
-			"Wall",
-			"dungeon.",
-			"Wall",
-			"1",
-			"2",
-			"particles",
-			"time",
-			"tile",
-			"enemies",
-			"this",
-			"e.",
-			"touches",
-			"&& e.touches ",
-			"e.touches && ",
-			"X",
-			"        if (TM.currentScreen !== 'game') return;",
-			"(c",
-			"clientY",
-			"clientX",
-			"layerY",
-			"layerX",
-			"to",
-			"obj2",
-			"obj1",
-			"obj3",
-			"emitters",
-			"Spell",
-			"Player",
-			"this.screenSize.h",
-			"this.screenSize.w",
-			"setNewPos",
-			"500",
-			"200",
-			"screen.pos",
-			"this",
-			"selected",
-			"this",
-			"board",
-			"y",
-			"x",
-			"selectFirstTile",
-			"getTileAt",
-			"move",
-			" + this.size / 2",
-			"3"
+			"this"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -1192,24 +1251,24 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 6,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "js/Dungeon.js",
+					"file": "js/Board.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5198,
+						"buffer_size": 4348,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4295,
-								4295
+								174,
+								174
 							]
 						],
 						"settings":
@@ -1219,10 +1278,469 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2901.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "js/Dungeon.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5884,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3877,
+								3877
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2688.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6934,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										163,
+										168
+									],
+									[
+										371,
+										376
+									],
+									[
+										536,
+										541
+									],
+									[
+										798,
+										803
+									],
+									[
+										999,
+										1004
+									],
+									[
+										1016,
+										1021
+									],
+									[
+										1158,
+										1163
+									],
+									[
+										1317,
+										1322
+									],
+									[
+										1474,
+										1479
+									],
+									[
+										1655,
+										1660
+									],
+									[
+										1812,
+										1817
+									],
+									[
+										1854,
+										1859
+									],
+									[
+										1935,
+										1940
+									],
+									[
+										2103,
+										2108
+									],
+									[
+										2114,
+										2119
+									],
+									[
+										2227,
+										2232
+									],
+									[
+										2239,
+										2244
+									],
+									[
+										2416,
+										2421
+									],
+									[
+										2569,
+										2574
+									],
+									[
+										2760,
+										2765
+									],
+									[
+										2904,
+										2909
+									],
+									[
+										2915,
+										2920
+									],
+									[
+										3024,
+										3029
+									],
+									[
+										3146,
+										3151
+									],
+									[
+										3188,
+										3193
+									],
+									[
+										3254,
+										3259
+									],
+									[
+										3423,
+										3428
+									],
+									[
+										3702,
+										3707
+									],
+									[
+										3872,
+										3877
+									],
+									[
+										4086,
+										4091
+									],
+									[
+										4300,
+										4305
+									],
+									[
+										4476,
+										4481
+									],
+									[
+										4612,
+										4617
+									],
+									[
+										4654,
+										4659
+									],
+									[
+										4735,
+										4740
+									],
+									[
+										4913,
+										4918
+									],
+									[
+										5054,
+										5059
+									],
+									[
+										5096,
+										5101
+									],
+									[
+										5214,
+										5219
+									],
+									[
+										5423,
+										5428
+									],
+									[
+										5542,
+										5547
+									],
+									[
+										5558,
+										5563
+									],
+									[
+										5581,
+										5586
+									],
+									[
+										5744,
+										5749
+									],
+									[
+										5863,
+										5868
+									],
+									[
+										5914,
+										5919
+									],
+									[
+										5993,
+										5998
+									],
+									[
+										6130,
+										6135
+									],
+									[
+										6149,
+										6154
+									],
+									[
+										6171,
+										6176
+									],
+									[
+										6327,
+										6332
+									],
+									[
+										6343,
+										6348
+									],
+									[
+										6363,
+										6368
+									],
+									[
+										6403,
+										6408
+									],
+									[
+										6430,
+										6435
+									],
+									[
+										6499,
+										6504
+									],
+									[
+										6621,
+										6626
+									],
+									[
+										6641,
+										6646
+									],
+									[
+										6826,
+										6831
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								2906,
+								2906
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2447.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "js/Canvas.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1746,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 678.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "js/Player.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2106,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								32,
+								32
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "js/Enemy.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2823,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2284,
+								2288
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1020.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "js/Game.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3761,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3065,
+								3070
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1567.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "js/Timer.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2761,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2695,
+								2695
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 188.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
