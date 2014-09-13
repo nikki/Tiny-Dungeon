@@ -1,4 +1,7 @@
 /_assets
 /build
 /node_modules
-/tm.*
+js13k.sublime-workspace
+js13k.sublime-project
+.DS_Store
+tiny-dungeon.zip
