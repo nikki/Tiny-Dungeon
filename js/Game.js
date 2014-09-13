@@ -135,7 +135,6 @@ TM.Game = (function(w, d) {
 
     pause : function(hidden) {
       if (TM.currentScreen !== 'game') return;
-      if (hidden) audio.play('stun');
       TM.timer.pause(hidden);
     },
 

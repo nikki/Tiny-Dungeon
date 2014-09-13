@@ -2,10 +2,10 @@ TM.Timer = (function() {
   var canvas = TM.Canvas;
 
   function Timer() {
-    this.x = 70;
-    this.y = 52;
-    this.size = { x : 8, y : 66 };
-    this.maxTime = 120;
+    this.x = 68;
+    this.y = 53;
+    this.size = { x : 10, y : 64 };
+    this.maxTime = 45;
     this.startTime = null;
     this.time = 0;
     this.tick = (this.size.y / this.maxTime);
@@ -34,7 +34,7 @@ TM.Timer = (function() {
     ctx.translate(this.x, this.y);
 
     // outline
-    canvas.fillRect({ c : 'gray', x : 0, y : 0, w : this.size.x, h : this.size.y });
+    canvas.fillRect({ c : '#ccc', x : 0, y : 0, w : this.size.x, h : this.size.y });
 
     // background
     canvas.fillRect({ c : 'black', x : 1, y : 1, w : this.size.x - 2, h : this.size.y - 2 });

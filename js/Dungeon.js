@@ -9,7 +9,7 @@ TM.Dungeon = (function(d) {
 
   var Dungeon = {
     x : 2,
-    y : 2,
+    y : 3,
     w : 76,
     h : 48,
 
@@ -145,9 +145,13 @@ TM.Dungeon = (function(d) {
       ctx.scale(TM.s, TM.s);
       ctx.translate(this.x, this.y);
 
+      // draw frame
       canvas.fillRect({ c : 'gray', x : 0, y : 0, w : this.w, h : this.h });
+
+      ctx.beginPath();
       ctx.rect(1, 1, this.w - 2, this.h - 2);
       ctx.clip();
+      ctx.closePath();
 
       // draw background
       ctx.drawImage(this.bg, 0, 0);

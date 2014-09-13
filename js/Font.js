@@ -27,7 +27,7 @@ TM.Font = (function() {
             x : lastX,
             y : 0,
             w : x - lastX,
-            h : h - 1
+            h : h - 2
           });
           lastX = x + 1; // set next lastX
           i += 4; // skip to next pixel

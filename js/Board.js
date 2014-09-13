@@ -7,7 +7,7 @@ TM.Board = (function() {
       board = [];
 
   var Board = {
-    x : 3,
+    x : 2,
     y : 53,
     size : 5,
 
@@ -142,36 +142,16 @@ TM.Board = (function() {
     },
 
     render : function() {
-      // render grid outlines
-      this.drawGrid(this.x - 0.5, this.y - 0.5);
-
-      // render tiles
-      this.drawTiles(this.x, this.y);
-    },
-
-    drawGrid : function(x, y) {
-      var i = 0;
-
-      ctx.save();
-      ctx.scale(TM.s, TM.s);
-      ctx.translate(x, y);
-
-      for (; i < this.size + 1; i++) {
-        canvas.drawLine({ o : 'v', c : 'black', x : i * tileSize, y : this.size * tileSize });
-        canvas.drawLine({ o : 'h', c : 'black', x : this.size * tileSize, y : i * tileSize });
-      }
-
-      ctx.restore();
-    },
-
-    drawTiles : function(x, y) {
       var x, y;
 
       ctx.save();
       ctx.scale(TM.s, TM.s);
-      ctx.translate(x, y);
+      ctx.translate(this.x, this.y);
+
+      ctx.beginPath();
       ctx.rect(0, 0, this.size * tileSize, this.size * tileSize);
       ctx.clip();
+      ctx.closePath();
 
       for (x = 0; x < this.size; x++) {
         for (y = 0; y < this.size; y++) {
@@ -182,9 +162,7 @@ TM.Board = (function() {
       }
 
       ctx.restore();
-    },
-
-    flipTiles : false
+    }
   };
 
   return Board;
