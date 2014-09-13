@@ -4,8 +4,6 @@ TM.Game = (function(w, d) {
       loop = TM.Loop,
       board = TM.Board,
       dungeon = TM.Dungeon,
-      particles = TM.Particles,
-      audio = TM.Audio,
       Timer = TM.Timer;
 
   var Game = {
@@ -98,7 +96,6 @@ TM.Game = (function(w, d) {
       audio.init();
       font.init();
       canvas.init();
-      particles.create({ name : 'fire', x : 15, y : 12 });
 
       event = new CustomEvent('gameReady');
       d.dispatchEvent(event);
@@ -112,7 +109,6 @@ TM.Game = (function(w, d) {
         if (dungeon.player) {
           dungeon.update(seconds);
           board.update(seconds);
-          particles.update(seconds);
           TM.timer.update(seconds);
           TWEEN.update();
         }

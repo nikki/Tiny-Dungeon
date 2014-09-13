@@ -55,9 +55,6 @@ TM.Dungeon = (function(d) {
         _this.player.stats.update('damageTakenOverall', _this.player.stats.damageTakenOverall + hit.damage);
       });
 
-      // play audio
-      audio.play(r(0,1) ? 'thud' : this.enemy.name);
-
       // enemy 'animation' ^^
       this.enemy.lastAttacked = 0;
       this.enemy.attacking = true;
@@ -82,9 +79,6 @@ TM.Dungeon = (function(d) {
         // 33% chance of immediate retaliation
         if (!r(0,2)) _this.hitPlayer();
       });
-
-      // play audio
-      audio.play(tile.spell);
     },
 
     castSpell : function(strength) {
@@ -101,9 +95,6 @@ TM.Dungeon = (function(d) {
       TM.timer.add(seconds, function(text) {
         _this.texts.push(new Text({ x : 118, y : 88, dY : 1, text : text }));
       });
-
-      // play audio
-      // audio.play('ping');
     },
 
     update : function(seconds) {
