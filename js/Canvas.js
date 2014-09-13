@@ -65,5 +65,3 @@ TM.Canvas = (function() {
   return Canvas;
 
 })();
-
-// http://jsfiddle.net/VAXrL/190/

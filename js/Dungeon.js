@@ -1,11 +1,10 @@
 TM.Dungeon = (function(d) {
   var canvas = TM.Canvas,
-      r = TM.Utils.rand,
+      r = TM.Utils.randInt,
       spells = TM.Spells,
       audio = TM.Audio,
       Player = TM.Player,
       Enemy = TM.Enemy,
-      Wall = TM.Wall,
       Text = TM.Text;
 
   var Dungeon = {
@@ -17,7 +16,6 @@ TM.Dungeon = (function(d) {
     stats : null,
     player : null,
     enemy : null,
-    walls : [],
     texts : [],
 
     init : function() {
@@ -32,7 +30,6 @@ TM.Dungeon = (function(d) {
       this.spawnEnemy();
 
       this.bg = TM.images['w_bg'];
-      this.createWalls();
     },
 
     spawnPlayer : function() {
@@ -60,6 +57,10 @@ TM.Dungeon = (function(d) {
 
       // play audio
       audio.play(r(0,1) ? 'thud' : this.enemy.name);
+
+      // enemy 'animation' ^^
+      this.enemy.attacking = true;
+      this.enemy.attackFor = 0.5;
     },
 
     hitEnemy : function(boardPos, tile, strength) {
@@ -104,91 +105,6 @@ TM.Dungeon = (function(d) {
       // audio.play('ping');
     },
 
-    createWalls : function() {
-      var i;
-
-      for (i = 0; i < 4; i++) {
-        this.walls.push(new Wall({
-          i : i,
-          w : this.w,
-          h : this.h,
-          c : (i % 2 ? 'orange' : 'green')
-        })); // bottom
-      }
-/*
-          x1 : 0,
-          y1 : 0,
-          w1 : this.w,
-          h1 : 0,
-          x2 : this.w/8,
-          y2 : this.h/8,
-          w2 : (this.w/4)*3,
-          h2 : 0,
-          c : 'red'
-*/
-/*
-      this.walls.push(new Wall({
-        x1 : 0,
-        y1 : 0,
-        w1 : this.w,
-        h1 : 0,
-        x2 : this.w/8,
-        y2 : this.h/8,
-        w2 : (this.w/4)*3,
-        h2 : 0,
-        c : 'red'
-      })); // top
-
-      this.walls.push(new Wall({
-        x1 : this.w/8,
-        y1 : this.h/8,
-        w1 : (this.w/4)*3,
-        h1 : 0,
-        x2 : this.w/4, // /4
-        y2 : this.h/4, // /4
-        w2 : this.w/2, // /2
-        h2 : 0,
-        c : 'pink'
-      })); // top x 2
-
-      this.walls.push(new Wall({
-        x1 : 0,
-        y1 : 0,
-        w1 : 0,
-        h1 : this.h,
-        x2 : this.w/4,
-        y2 : this.h/4,
-        w2 : 0,
-        h2 : this.h/2,
-        c : 'yellow'
-      })); // left
-
-      this.walls.push(new Wall({
-        x1 : 0,
-        y1 : this.h,
-        w1 : this.w,
-        h1 : 0,
-        x2 : this.w/4,
-        y2 : (this.h/4)*3,
-        w2 : this.w/2,
-        h2 : 0,
-        c : 'orange'
-      })); // bottom
-
-      this.walls.push(new Wall({
-        x1 : this.w,
-        y1 : 0,
-        w1 : 0,
-        h1 : this.h,
-        x2 : (this.w/4)*3,
-        y2 : (this.h/4),
-        w2 : 0,
-        h2 : this.h/2,
-        c : 'green'
-      })); // right
-*/
-    },
-
     update : function(seconds) {
       var i, j;
 
@@ -214,12 +130,6 @@ TM.Dungeon = (function(d) {
       } else {
         this.enemy.update(this.vel, seconds);
       }
-
-      // update walls
-      for (i = 0; i < this.walls.length; i++) {
-        this.walls[i].update(this.vel, seconds);
-        if (this.walls[i].dead) this.walls.splice(i, 1);
-      }
     },
 
     render : function() {
@@ -239,12 +149,6 @@ TM.Dungeon = (function(d) {
 
       // draw background
       ctx.drawImage(this.bg, 19, 12);
-
-      // render walls front to back
-      i = this.walls.length;
-      while (i--) {
-        this.walls[i].render(this.w, this.h);
-      }
 
       // render current enemy
       this.enemy.render(this.w, this.h);

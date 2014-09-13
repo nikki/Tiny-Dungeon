@@ -21,7 +21,6 @@ TM.Dom = (function(w, d) {
     return { x : x, y : y };
   }
 
-
   var Dom = {
     init : function() {
       var _this = this;
@@ -59,17 +58,6 @@ TM.Dom = (function(w, d) {
         if (TM.currentScreen !== 'game') return;
         input.trigger('lastInChain', { x : p.x, y : p.y });
         pressed = false;
-        e.preventDefault();
-      });
-
-      this.bind($('.tweet'), 'mousedown touchstart', function(e) {
-        // http://js13kgames.com/entries/tiny-dungeon
-        // console.log(this);
-        e.preventDefault();
-      });
-
-      this.bind($('.share'), 'mousedown touchstart', function(e) {
-        // console.log(this);
         e.preventDefault();
       });
 

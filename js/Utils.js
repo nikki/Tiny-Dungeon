@@ -79,14 +79,11 @@ TM.Utils = (function() {
     },
 
     rand : function(min, max) {
-      return (Math.random() * (max - min + 1)) | 0 + min;
+      return (Math.random() * (max - min + 1)) + min;
     },
 
-    merge : function(o1, o2) {
-      var o = {};
-      for (var attrname in o1) { o[attrname] = o1[attrname]; }
-      for (var attrname in o2) { o[attrname] = o2[attrname]; }
-      return o;
+    randInt : function(min, max) {
+      return (Math.random() * (max - min + 1)) | 0 + min;
     }
   };
 

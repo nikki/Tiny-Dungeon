@@ -1,5 +1,5 @@
 TM.Enemy = (function() {
-  var r = TM.Utils.rand;
+  var r = TM.Utils.randInt;
 
   var settings = [
     {
@@ -21,18 +21,13 @@ TM.Enemy = (function() {
       name : 'frostgiant',
       spell : 'water',
       weakTo : 'fire'
-    }/*,
-    {
-      name : 'tribble',
-      spell : 'cuteness'
-    }*/
+    }
   ];
 
   function Enemy(o) {
     this.x = 0;
     this.y = 0;
-    this.z = 200;
-
+    this.z = r(300, 450);
     this.fov = 60;
     this.step = 0.25;
     this.stepTimer = 0;
@@ -47,6 +42,9 @@ TM.Enemy = (function() {
     this.health = this.baseHealth;
     this.strength = this.level * 2;
     this.critChance = this.level + 10;
+
+    this.attacking = false;
+    this.attackFor = 0;
 
     this.image = TM.images['e_' + this.name];
     this.w = this.image.width;
@@ -88,6 +86,12 @@ TM.Enemy = (function() {
       this.stepTimer = 0;
     }
 
+    // attacking?
+    if (this.attacking) {
+      this.attackFor -= seconds;
+      if (this.attackFor < 0) this.attacking = false;
+    }
+
     // dead?
     if (this.health <= 0) this.dead = true;
   };
@@ -97,10 +101,15 @@ TM.Enemy = (function() {
     var x = (this.x * scale) + (sw / 2);
     var y = (this.y * scale) + (sh / 2);
 
+    // too far away to draw!
+    if (this.z > 200) return;
+
     // alive?
     if (!this.dead) {
       // draw sprite
-      ctx.drawImage(this.image, x - (this.w * scale) / 2, y - (this.h * scale) / 2, this.w * scale, this.h * scale);
+      ctx.globalAlpha = 1 - this.z / 200;
+      ctx.drawImage(this.image, x - (this.w * scale) / 2, y - (this.attacking ? 2 : 0) - (this.h * scale) / 2, this.w * scale, this.h * scale);
+      ctx.globalAlpha = 1;
 
       if (TM.wait) {
         // draw health meter
@@ -112,8 +121,6 @@ TM.Enemy = (function() {
         ctx.fillStyle = 'black';
         ctx.fillRect(sw / 2 - 14, sh - 8, 28, 5);
       }
-    } else {
-      // death animation
     }
   };
 

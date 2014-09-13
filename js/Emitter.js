@@ -5,8 +5,12 @@ TM.Emitter = (function() {
     var emitter = settings.emitter,
         particle = settings.particle;
 
+    this.x = emitter.x;
+    this.y = emitter.y;
+    this.max = emitter.max;
+
     this.particles = [];
-    for (i = 0; i < emitter.max; i++) {
+    for (i = 0; i < this.max; i++) {
       this.particles.push(new Particle(particle));
     }
   }
@@ -26,9 +30,15 @@ TM.Emitter = (function() {
   Emitter.prototype.render = function() {
     var i;
 
+    ctx.save();
+    ctx.scale(TM.s, TM.s);
+    ctx.translate(this.x, this.y);
+
     for (i = 0; i < this.particles.length; i++) {
       this.particles[i].render();
     }
+
+    ctx.restore();
   };
 
   return Emitter;

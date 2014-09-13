@@ -11,6 +11,7 @@ TM.Screens = (function() {
       ctx.scale(TM.s, TM.s);
       canvas.drawText({ text : 'Tiny Dungeon', x : 13.5, y : 12 });
       canvas.drawText({ text : (touch ? 'Tap' : 'Click') + ' To Start' , x : (touch ? 14 : 12.5), y : 102 });
+      particles.render();
       ctx.drawImage(TM.images['s_title'], 18, 36); // from http://opengameart.org/content/dungeon-tileset
       ctx.restore();
     },
@@ -18,7 +19,6 @@ TM.Screens = (function() {
     game : function() {
       dungeon.render();
       board.render();
-      // particles.render();
       TM.timer.render();
     },
 

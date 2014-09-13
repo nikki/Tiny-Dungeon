@@ -1,6 +1,6 @@
 TM.Player = (function() {
   var Stats = TM.Stats,
-      r = TM.Utils.rand;
+      r = TM.Utils.randInt;
 
   function Player() {
     this.step = 0.25;
@@ -13,7 +13,7 @@ TM.Player = (function() {
     this.mh = this.mage.height;
 
     this.staff = TM.images['p_staff'];
-    this.sx = 50;
+    this.sx = 44;
     this.sy = 16;
     this.sw = this.staff.width;
     this.sh = this.staff.height;

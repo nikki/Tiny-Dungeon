@@ -11,7 +11,7 @@ TM.Tile = (function() {
   function Tile(p) {
     var _this = this;
 
-    this.type = utils.rand(0, 3);
+    this.type = utils.randInt(0, 3);
     this.colour = colours[this.type];
     this.spell = spells[this.type];
     this.image = TM.images['t_' + this.spell];

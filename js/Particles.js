@@ -1,7 +1,7 @@
 TM.Particles = (function() {
   var Emitter = TM.Emitter,
       canvas = TM.Canvas,
-      r = TM.Utils.rand;
+      r = TM.Utils.randInt;
 
   var settings = {
     earth : {
@@ -66,8 +66,8 @@ TM.Particles = (function() {
         x : 0,
         y : 0,
         minSize : 1,
-        sizeRange : 1,
-        vel : { x : 1, y : 1 },
+        sizeRange : 3,
+        vel : { x : 0, y : -1 },
         gravity : { x : 0, y : 0 },
         rotation : 0,
         colour : 'red',
@@ -78,18 +78,18 @@ TM.Particles = (function() {
       emitter : {
         max : 30
       }
-    },
-
-    torch : {
-
     }
   };
 
   var Particles = {
     emitters : [],
 
-    create : function(name) {
-      this.emitters.push(new Emitter(settings[name]));
+    create : function(o) {
+      var e = settings[o.name];
+      e.emitter.x = o.x;
+      e.emitter.y = o.y;
+
+      this.emitters.push(new Emitter(e));
     },
 
     update : function(seconds) {
@@ -103,15 +103,9 @@ TM.Particles = (function() {
     render : function() {
       var i;
 
-      ctx.save();
-      ctx.scale(TM.s, TM.s);
-      // ctx.translate(0, 0);
-
       for (i = 0; i < this.emitters.length; i++) {
         this.emitters[i].render();
       }
-
-      ctx.restore();
     }
   };
 

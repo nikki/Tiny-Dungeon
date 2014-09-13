@@ -98,6 +98,7 @@ TM.Game = (function(w, d) {
       audio.init();
       font.init();
       canvas.init();
+      particles.create({ name : 'fire', x : 15, y : 12 });
 
       event = new CustomEvent('gameReady');
       d.dispatchEvent(event);
@@ -139,8 +140,18 @@ TM.Game = (function(w, d) {
     },
 
     end : function() {
+      var link = 'http://js13kgames.com/entries/tiny-dungeon/',
+          text = 'I survived for ' + dungeon.stats.totalTimeSurvived + ' seconds in the Tiny Dungeon ' + link;
+
+      // set screen
       TM.currentScreen = 'social';
       TM.Screens.statsX = 0;
+
+      // set link hrefs
+      $('.tweet').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&hashtags=js13k', '_blank';
+      $('.share').href = 'http://www.facebook.com/sharer.php?s=100&p[title]=Tiny+Dungeon+js13k+Game&p[url]=' + encodeURIComponent(link) + '&p[summary]=' + encodeURIComponent(text + ' #js13k'), '_blank';
+
+      // show screen
       $('.social').style.display = 'block';
     }
   };
