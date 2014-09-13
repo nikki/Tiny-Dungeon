@@ -29,7 +29,7 @@ TM.Dungeon = (function(d) {
       this.enemy = null;
       this.spawnEnemy();
 
-      this.bg = TM.images['w_bg'];
+      this.bg = TM.images['bg'];
     },
 
     spawnPlayer : function() {
@@ -59,6 +59,7 @@ TM.Dungeon = (function(d) {
       audio.play(r(0,1) ? 'thud' : this.enemy.name);
 
       // enemy 'animation' ^^
+      this.enemy.lastAttacked = 0;
       this.enemy.attacking = true;
       this.enemy.attackFor = 0.5;
     },
@@ -128,6 +129,7 @@ TM.Dungeon = (function(d) {
         this.player.stats.update('totalEnemiesKilled', this.player.stats.totalEnemiesKilled + 1);
         TM.wait = false;
       } else {
+        if (TM.wait && this.enemy.lastAttacked > 8) this.hitPlayer();
         this.enemy.update(this.vel, seconds);
       }
     },
@@ -143,12 +145,12 @@ TM.Dungeon = (function(d) {
       ctx.scale(TM.s, TM.s);
       ctx.translate(this.x, this.y);
 
-      canvas.fillRect({ c : 'brown', x : 0, y : 0, w : this.w, h : this.h });
+      canvas.fillRect({ c : 'gray', x : 0, y : 0, w : this.w, h : this.h });
       ctx.rect(1, 1, this.w - 2, this.h - 2);
       ctx.clip();
 
       // draw background
-      ctx.drawImage(this.bg, 19, 12);
+      ctx.drawImage(this.bg, 0, 0);
 
       // render current enemy
       this.enemy.render(this.w, this.h);

@@ -34,7 +34,7 @@ TM.Timer = (function() {
     ctx.translate(this.x, this.y);
 
     // outline
-    canvas.fillRect({ c : 'white', x : 0, y : 0, w : this.size.x, h : this.size.y });
+    canvas.fillRect({ c : 'gray', x : 0, y : 0, w : this.size.x, h : this.size.y });
 
     // background
     canvas.fillRect({ c : 'black', x : 1, y : 1, w : this.size.x - 2, h : this.size.y - 2 });

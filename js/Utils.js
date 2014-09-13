@@ -15,7 +15,7 @@ var TM = {
     'e_banshee',
     'e_imp',
     'e_frostgiant',
-    'w_bg'
+    'bg'
   ],
   currentScreen : 'title',
   timer : null,

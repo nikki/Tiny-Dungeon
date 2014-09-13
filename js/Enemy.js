@@ -45,6 +45,7 @@ TM.Enemy = (function() {
 
     this.attacking = false;
     this.attackFor = 0;
+    this.lastAttacked = null;
 
     this.image = TM.images['e_' + this.name];
     this.w = this.image.width;
@@ -90,6 +91,8 @@ TM.Enemy = (function() {
     if (this.attacking) {
       this.attackFor -= seconds;
       if (this.attackFor < 0) this.attacking = false;
+    } else {
+      this.lastAttacked += seconds;
     }
 
     // dead?

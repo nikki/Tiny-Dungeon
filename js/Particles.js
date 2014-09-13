@@ -1,110 +1,32 @@
 TM.Particles = (function() {
-  var Emitter = TM.Emitter,
-      canvas = TM.Canvas,
+  var canvas = TM.Canvas,
+      Particle = TM.Particle,
       r = TM.Utils.randInt;
 
-  var settings = {
-    earth : {
-      particle : {
-        x : 0,
-        y : 0,
-        minSize : 1,
-        sizeRange : 1,
-        vel : { x : 1, y : 1 },
-        gravity : { x : 0, y : 0 },
-        rotation : 0,
-        colour : 'green',
-        alpha : 0.5,
-        minLife : 10,
-        lifeRange : 2
-      },
-      emitter : {
-        max : 30
-      }
-    },
-
-    water : {
-      particle : {
-        x : 0,
-        y : 0,
-        minSize : 1,
-        sizeRange : 1,
-        vel : { x : 1, y : 1 },
-        gravity : { x : 0.5, y : 2 },
-        rotation : 315,
-        colour : 'blue',
-        alpha : 1,
-        minLife : 10,
-        lifeRange : 2
-      },
-      emitter : {
-        max : 30
-      }
-    },
-
-    air : {
-      particle : {
-        x : 0,
-        y : 0,
-        minSize : 1,
-        sizeRange : 1,
-        vel : { x : 1, y : 1 },
-        gravity : { x : 0, y : 0 },
-        rotation : 0,
-        colour : 'white',
-        alpha : 0.5,
-        minLife : 10,
-        lifeRange : 2
-      },
-      emitter : {
-        max : 30
-      }
-    },
-
-    fire : {
-      particle : {
-        x : 0,
-        y : 0,
-        minSize : 1,
-        sizeRange : 3,
-        vel : { x : 0, y : -1 },
-        gravity : { x : 0, y : 0 },
-        rotation : 0,
-        colour : 'red',
-        alpha : 0.5,
-        minLife : 10,
-        lifeRange : 2
-      },
-      emitter : {
-        max : 30
-      }
-    }
-  };
-
   var Particles = {
-    emitters : [],
+    particles : [],
 
-    create : function(o) {
-      var e = settings[o.name];
-      e.emitter.x = o.x;
-      e.emitter.y = o.y;
+    create : function(o, max) {
+      var i;
 
-      this.emitters.push(new Emitter(e));
+      for (i = 0; i < max; i++) {
+        this.particles.push(new Particle(type));
+      }
     },
 
     update : function(seconds) {
       var i;
 
-      for (i = 0; i < this.emitters.length; i++) {
-        this.emitters[i].update(seconds);
+      for (i = 0; i < this.particles.length; i++) {
+        this.particles[i].update(seconds);
       }
     },
 
     render : function() {
       var i;
 
-      for (i = 0; i < this.emitters.length; i++) {
-        this.emitters[i].render();
+      for (i = 0; i < this.particles.length; i++) {
+        this.particles[i].render();
       }
     }
   };
