@@ -29,14 +29,13 @@ TM.Enemy = (function() {
   ];
 
   function Enemy(o) {
-    this.fov = 60;
-    this.depth = o.depth;
-    this.step = 0.25;
-    this.stepTimer = 0;
-
     this.x = 0;
     this.y = 0;
-    this.z = this.depth;
+    this.z = 200;
+
+    this.fov = 60;
+    this.step = 0.25;
+    this.stepTimer = 0;
 
     this.type = r(0, settings.length - 1);
     this.name = settings[this.type].name;
@@ -44,24 +43,24 @@ TM.Enemy = (function() {
     this.weakTo = settings[this.type].weakTo;
 
     this.level = o.level;
-    this.baseHealth = 20;
-    this.health = /*this.level * */20;
-    this.strength = /*this.level * */20;
+    this.baseHealth = 10 + (this.level * 4);
+    this.health = this.baseHealth;
+    this.strength = this.level * 2;
+    this.critChance = this.level + 10;
 
     this.image = TM.images['e_' + this.name];
     this.w = this.image.width;
     this.h = this.image.height;
-    this.attacking = false;
     this.dead = false;
   }
 
   Enemy.prototype.drawHealthMeter = function() {
     ctx.fillStyle = 'white';
-    ctx.fillRect(1, 1, 20, 4);
+    ctx.fillRect(2, 2, 20, 4);
     ctx.fillStyle = 'black';
-    ctx.fillRect(2, 2, 18, 2);
+    ctx.fillRect(3, 3, 18, 2);
     ctx.fillStyle = 'red';
-    ctx.fillRect(2, 2, 18 * (this.health / this.baseHealth), 2);
+    ctx.fillRect(3, 3, 18 * (this.health / this.baseHealth), 2);
   };
 
   Enemy.prototype.hit = function(o, callback) {
@@ -69,16 +68,16 @@ TM.Enemy = (function() {
 
     if (o.spell === this.spell) {
       base = 0;
-      text = 'HP *IMMUNE*';
+      text = ' HP *IMMUNE*';
     } else if (o.spell === this.weakTo) {
       base = 2;
-      text = 'HP *CRIT!*';
+      text = ' HP *CRIT!*';
     }
 
     damage = base * o.strength; // * level multiplier
 
     this.health -= damage;
-    callback(!!(base === 2), damage, '-' + damage + ' ' + text);
+    callback(!!(base === 2), damage, '-' + damage + text);
   };
 
   Enemy.prototype.update = function(vel, seconds) {
@@ -98,23 +97,20 @@ TM.Enemy = (function() {
     var x = (this.x * scale) + (sw / 2);
     var y = (this.y * scale) + (sh / 2);
 
-    // attacking?
-    this.attacking = TM.wait;
-
     // alive?
     if (!this.dead) {
       // draw sprite
       ctx.drawImage(this.image, x - (this.w * scale) / 2, y - (this.h * scale) / 2, this.w * scale, this.h * scale);
 
-      if (this.attacking) {
+      if (TM.wait) {
         // draw health meter
         this.drawHealthMeter();
 
         // draw name
         ctx.fillStyle = 'white';
-        ctx.fillRect(sw / 2 - 15, sh - 8, 30, 7);
+        ctx.fillRect(sw / 2 - 15, sh - 9, 30, 7);
         ctx.fillStyle = 'black';
-        ctx.fillRect(sw / 2 - 14, sh - 7, 28, 5);
+        ctx.fillRect(sw / 2 - 14, sh - 8, 28, 5);
       }
     } else {
       // death animation

@@ -4,7 +4,6 @@ TM.Game = (function(w, d) {
       loop = TM.Loop,
       board = TM.Board,
       dungeon = TM.Dungeon,
-      spells = TM.Spells,
       particles = TM.Particles,
       audio = TM.Audio,
       Timer = TM.Timer;
@@ -71,7 +70,7 @@ TM.Game = (function(w, d) {
         });
 
         // cast the spell
-        dungeon.castSpell({ x : board.x, y : board.y }, this.currentTile, this.chain.length);
+        dungeon.castSpell(this.chain.length);
 
         // currently fighting enemy?
         if (TM.wait) {
@@ -112,7 +111,6 @@ TM.Game = (function(w, d) {
         if (dungeon.player) {
           dungeon.update(seconds);
           board.update(seconds);
-          spells.update(seconds);
           particles.update(seconds);
           TM.timer.update(seconds);
           TWEEN.update();

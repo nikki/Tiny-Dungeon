@@ -5,7 +5,7 @@ TM.Timer = (function() {
     this.x = 70;
     this.y = 52;
     this.size = { x : 8, y : 66 };
-    this.maxTime = 5;
+    this.maxTime = 60;
     this.startTime = null;
     this.time = 0;
     this.tick = (this.size.y / this.maxTime);
@@ -80,7 +80,7 @@ TM.Timer = (function() {
     };
     this.time += seconds;
 
-    callback('- ' + seconds + ' secs');
+    callback('-' + seconds + ' SECS');
   };
 
   Timer.prototype.pause = function(p) {

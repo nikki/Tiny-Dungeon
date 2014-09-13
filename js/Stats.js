@@ -26,8 +26,6 @@ TM.Stats = (function() {
         }
       }
     }
-
-    // console.log(this.totalTimeSurvived);
   };
 
   return Stats;

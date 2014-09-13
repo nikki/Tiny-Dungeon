@@ -2,6 +2,7 @@ TM.Tile = (function() {
   var utils = TM.Utils;
 
   var spells = ['earth', 'water', 'air', 'fire'],
+      colours = ['green', 'blue', 'magenta', 'red'],
       blend = (function() {
         ctx.globalCompositeOperation = 'screen';
         return ctx.globalCompositeOperation === 'screen';
@@ -11,6 +12,7 @@ TM.Tile = (function() {
     var _this = this;
 
     this.type = utils.rand(0, 3);
+    this.colour = colours[this.type];
     this.spell = spells[this.type];
     this.image = TM.images['t_' + this.spell];
     this.size = 12;

@@ -13,14 +13,6 @@ TM.Canvas = (function() {
       ctx.globalCompositeOperation = 'source-over';
     },
 
-    // canvas.drawImageScaled({ img : TM.images['scr_title'], x : 0, y : 0 });
-    drawImageScaled : function(o) {
-      ctx.save();
-      ctx.scale(TM.s, TM.s);
-      ctx.drawImage(o.img, o.x, o.y);
-      ctx.restore();
-    },
-
     drawLine : function(o) {
       ctx.strokeStyle = o.c;
       ctx.lineWidth = 1;
@@ -54,13 +46,17 @@ TM.Canvas = (function() {
       ctx.fillRect(o.x, o.y, o.w, o.h);
     },
 
-    polygon : function(o) {
-      ctx.fillStyle = o.c;
+    segment : function(x1, y1, w1, x2, y2, w2, c) {
+      this.polygon(x1, y1, x1+w1, y1, x2+w2, y2, x2, y2, c);
+    },
+
+    polygon : function(x1, y1, x2, y2, x3, y3, x4, y4, color) {
+      ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.moveTo(o.x1, o.y1);
-      ctx.lineTo(o.x1 + o.w1, o.y1 + o.h1);
-      ctx.lineTo(o.x2 + o.w2, o.y2 + o.h2);
-      ctx.lineTo(o.x2, o.y2);
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.lineTo(x3, y3);
+      ctx.lineTo(x4, y4);
       ctx.closePath();
       ctx.fill();
     }

@@ -10,9 +10,9 @@ TM.Dungeon = (function(d) {
 
   var Dungeon = {
     x : 2,
-    y : 12,
+    y : 2,
     w : 76,
-    h : 38,
+    h : 48,
 
     stats : null,
     player : null,
@@ -21,14 +21,17 @@ TM.Dungeon = (function(d) {
     texts : [],
 
     init : function() {
-      this.stats = null;
+      this.pos = 0;
+      this.vel = 1000;
 
+      this.stats = null;
       this.player = null;
       this.spawnPlayer();
 
       this.enemy = null;
       this.spawnEnemy();
 
+      this.bg = TM.images['w_bg'];
       this.createWalls();
     },
 
@@ -37,45 +40,52 @@ TM.Dungeon = (function(d) {
     },
 
     spawnEnemy : function() {
-      var enemy = new Enemy({ depth : 200, level : this.player.level });
+      var enemy = new Enemy({ level : this.player.level });
 
-      if (this.enemy && this.enemy.type === enemy.type) {
-        return this.spawnEnemy();
-      }
-
+      if (this.enemy && this.enemy.type === enemy.type) return this.spawnEnemy();
       this.enemy = enemy;
     },
 
     hitPlayer : function() {
+      var _this = this, hit = this.player.hit({ strength : this.enemy.strength, critChance : this.enemy.critChance });
+
+      TM.timer.remove(hit.damage, function(text) {
+        if (hit.crit) _this.texts.push(new Text({ x : 118, y : 78, dY : 1, text : '*CRIT!*' }));
+        _this.texts.push(new Text({ x : 118, y : 88, dY : 1, text : text }));
+
+        // update damage stats
+        _this.player.stats.update('mostDamageTaken', { amount : hit.damage, enemy : _this.enemy.name });
+        _this.player.stats.update('damageTakenOverall', _this.player.stats.damageTakenOverall + hit.damage);
+      });
+
       // play audio
-      // audio.play('thud');
+      audio.play(r(0,1) ? 'thud' : this.enemy.name);
     },
 
     hitEnemy : function(boardPos, tile, strength) {
       var _this = this;
 
       // hit enemy
-      this.enemy.hit({ spell : tile.spell, strength : strength }, function(crit, dmg, text) {
-        // update crit stat
-        if (crit) _this.player.stats.update('highestCrit', { amount : dmg, enemy : _this.enemy.name });
-
+      this.enemy.hit({ spell : tile.spell, strength : strength }, function(crit, damage, text) {
         // draw damage text
-        _this.texts.push(new Text({ x : 2, y : 9, dY : 1, text : text }));
+        _this.texts.push(new Text({ x : 9, y : 20, dY : 1, text : text }));
+
+        // update crit stat
+        if (crit) {
+          _this.player.stats.update('highestCrit', { amount : damage, enemy : _this.enemy.name });
+          _this.hitPlayer(); // 33% chance of immediate retaliation
+          return;
+        }
+
+        // 33% chance of immediate retaliation
+        if (!r(0,2)) _this.hitPlayer();
       });
 
       // play audio
       audio.play(tile.spell);
     },
 
-    castSpell : function(boardPos, tile, strength) {
-      // create spell effect
-      spells.create({
-        name : tile.spell,
-        strength : strength,
-        x : boardPos.x + tile.screenPos.x + (tile.size / 2),
-        y : boardPos.y + tile.screenPos.y + (tile.size / 2)
-      });
-
+    castSpell : function(strength) {
       // player cast animation
       this.player.castAnimation();
 
@@ -87,7 +97,7 @@ TM.Dungeon = (function(d) {
       var _this = this;
 
       TM.timer.add(seconds, function(text) {
-        _this.texts.push(new Text({ x : 52, y : 34, dY : 1, text : text }));
+        _this.texts.push(new Text({ x : 118, y : 88, dY : 1, text : text }));
       });
 
       // play audio
@@ -95,6 +105,28 @@ TM.Dungeon = (function(d) {
     },
 
     createWalls : function() {
+      var i;
+
+      for (i = 0; i < 4; i++) {
+        this.walls.push(new Wall({
+          i : i,
+          w : this.w,
+          h : this.h,
+          c : (i % 2 ? 'orange' : 'green')
+        })); // bottom
+      }
+/*
+          x1 : 0,
+          y1 : 0,
+          w1 : this.w,
+          h1 : 0,
+          x2 : this.w/8,
+          y2 : this.h/8,
+          w2 : (this.w/4)*3,
+          h2 : 0,
+          c : 'red'
+*/
+/*
       this.walls.push(new Wall({
         x1 : 0,
         y1 : 0,
@@ -154,49 +186,38 @@ TM.Dungeon = (function(d) {
         h2 : this.h/2,
         c : 'green'
       })); // right
+*/
     },
 
     update : function(seconds) {
       var i, j;
 
+      // gameover?
+      if (this.checkTimer()) return;
+
+      // update position
+      this.vel = TM.wait ? 0 : 1000;
+      this.pos += this.vel;
+
       // update player
-      if (TM.timer.time >= TM.timer.maxTime) {
-        // update total time survived
-        this.player.stats.update('totalTimeSurvived', ((+new Date() - TM.timer.startTime) / 1000) | 0);
-
-        // game over
-        this.stats = this.player.stats;
-        event = new CustomEvent('gameEnd');
-        d.dispatchEvent(event);
-
-        // destroy player
-        this.player = null;
-        // TM.timer = null;
-        return;
-      } else {
-        this.player.update(seconds);
-
-        // console.log(this.player.stepTimer);
-
-        // walk noise
-        // audio.play('walk');
-      }
+      this.player.update(seconds);
 
       // met an enemy, wait camera position
-      if (this.enemy.z < this.enemy.fov / 2) TM.wait = true;
+      if (this.enemy.z < 5) TM.wait = true;
 
       // update enemy
       if (this.enemy.dead) {
         this.spawnEnemy();
+        this.player.level += 1.4;
         this.player.stats.update('totalEnemiesKilled', this.player.stats.totalEnemiesKilled + 1);
         TM.wait = false;
       } else {
-        this.enemy.update(this.player.currentVel, seconds);
+        this.enemy.update(this.vel, seconds);
       }
 
       // update walls
       for (i = 0; i < this.walls.length; i++) {
-        this.walls[i].update(this.player.currentVel, seconds);
+        this.walls[i].update(this.vel, seconds);
         if (this.walls[i].dead) this.walls.splice(i, 1);
       }
     },
@@ -211,11 +232,13 @@ TM.Dungeon = (function(d) {
       ctx.save();
       ctx.scale(TM.s, TM.s);
       ctx.translate(this.x, this.y);
-      ctx.rect(0, 0, this.w, this.h);
+
+      canvas.fillRect({ c : 'brown', x : 0, y : 0, w : this.w, h : this.h });
+      ctx.rect(1, 1, this.w - 2, this.h - 2);
       ctx.clip();
 
       // draw background
-      canvas.fillRect({ c : '#42382C', x : 0, y : 0, w : this.w, h : this.h });
+      ctx.drawImage(this.bg, 19, 12);
 
       // render walls front to back
       i = this.walls.length;
@@ -248,10 +271,26 @@ TM.Dungeon = (function(d) {
 
       // draw half-scaled (ie. 4px) enemy nameplate - it's the only way it'll fit
       if (TM.wait) {
-        canvas.drawText({ text : (this.enemy.name).toUpperCase(), x : 2 * (this.x + this.w / 2), y : 2 * (this.y + this.h - 6) });
+        canvas.drawText({ text : (this.enemy.name).toUpperCase(), x : 2 * (this.x + this.w / 2) - (this.enemy.name.length / 2) * 4.3, y : 2 * (this.y + this.h - 7) });
       }
 
       ctx.restore();
+    },
+
+    checkTimer: function() {
+      if (TM.timer.time >= TM.timer.maxTime) {
+        // update total time survived
+        this.player.stats.update('totalTimeSurvived', ((+new Date() - TM.timer.startTime) / 1000) | 0);
+
+        // game over
+        this.stats = this.player.stats;
+        event = new CustomEvent('gameEnd');
+        d.dispatchEvent(event);
+
+        // destroy player
+        this.player = null;
+        return true;
+      }
     }
   };
 

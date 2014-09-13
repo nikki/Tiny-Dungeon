@@ -1,14 +1,10 @@
 TM.Player = (function() {
-  var Stats = TM.Stats;
+  var Stats = TM.Stats,
+      r = TM.Utils.rand;
 
   function Player() {
-    this.pos = 0; // dungeon pos
-    this.baseVel = 1000;
-    this.currentVel = 1000;
-
     this.step = 0.25;
     this.stepTimer = 0; // head bob
-    this.defending = false;
 
     this.mage = TM.images['p_mage'];
     this.mx = 38;
@@ -25,23 +21,19 @@ TM.Player = (function() {
 
     // stats
     this.stats = new Stats;
+    this.level = 1;
   }
 
   Player.prototype.update = function(seconds) {
-    // update dungeon pos
-    this.defending = TM.wait;
-    this.currentVel = this.defending ? 0 : this.baseVel;
-    this.pos += this.currentVel;
-
     // headbob
     this.stepTimer += seconds;
-    if (this.stepTimer >= this.step * 2 || this.defending) {
+    if (this.stepTimer >= this.step * 2 || TM.wait) {
       this.stepTimer = 0;
     }
   };
 
   Player.prototype.render = function() {
-    if (!this.defending) {
+    if (!TM.wait) {
       // draw mage
       ctx.drawImage(this.mage, this.mx, this.my + (this.stepTimer >= this.step ? 1 : 0), this.mw, this.mh);
 
@@ -56,6 +48,16 @@ TM.Player = (function() {
       } else {
         ctx.drawImage(this.staff, this.sx, this.sy + (this.stepTimer >= this.step ? 1 : 0), this.sw, this.sh);
       }
+    }
+  };
+
+  Player.prototype.hit = function(o) {
+    var crit = r(0,100) < o.critChance ? 1 : 0.5,
+        damage = (crit * o.strength) | 0;
+
+    return {
+      crit : crit >= 1,
+      damage : damage
     }
   };
 

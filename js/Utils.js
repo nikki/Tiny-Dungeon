@@ -4,6 +4,7 @@ var TM = {
   s : 4,
   images : [
     'font',
+    's_title',
     't_earth',
     't_water',
     't_air',
@@ -13,7 +14,8 @@ var TM = {
     'e_lasher',
     'e_banshee',
     'e_imp',
-    'e_frostgiant'
+    'e_frostgiant',
+    'w_bg'
   ],
   currentScreen : 'title',
   timer : null,

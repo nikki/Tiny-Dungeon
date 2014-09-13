@@ -15,8 +15,6 @@ Dungeon
   Player
   Enemy
   Wall
-  Spells
-    Spell
   Particles
     Emitter
       Particle

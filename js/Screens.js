@@ -3,36 +3,27 @@ TM.Screens = (function() {
       board = TM.Board,
       dungeon = TM.Dungeon,
       particles = TM.Particles,
-      spells = TM.Spells,
       touch = !!('ontouchstart' in window);
 
   var Screens = {
     title : function() {
-      // canvas.drawImageScaled({ img : TM.images['scr_title'], x : 0, y : 0 });
-
-      ctx.fillStyle = 'black';
-      ctx.fillRect(0, 0, TM.w, TM.h);
-
       ctx.save();
       ctx.scale(TM.s, TM.s);
       canvas.drawText({ text : 'Tiny Dungeon', x : 13.5, y : 12 });
       canvas.drawText({ text : (touch ? 'Tap' : 'Click') + ' To Start' , x : (touch ? 14 : 12.5), y : 102 });
+      ctx.drawImage(TM.images['s_title'], 18, 36); // from http://opengameart.org/content/dungeon-tileset
       ctx.restore();
     },
 
     game : function() {
       dungeon.render();
       board.render();
-      spells.render();
       // particles.render();
       TM.timer.render();
     },
 
     social : function() {
       var stats = dungeon.stats;
-
-      ctx.fillStyle = 'black';
-      ctx.fillRect(0, 0, TM.w, TM.h);
 
       ctx.save();
       ctx.scale(TM.s, TM.s);

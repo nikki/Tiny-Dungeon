@@ -3,27 +3,6 @@ TM.Dom = (function(w, d) {
       input = TM.Input,
       game = TM.Game;
 
-  var keys = {
-    37 : 'LEFT',
-    38 : 'UP',
-    39 : 'RIGHT',
-    40 : 'DOWN'
-  },
-
-  gestures = {
-    LEFT : { x : -1, y : 0 },
-    UP : { x : 0, y : -1 },
-    RIGHT : { x : 1, y : 0 },
-    DOWN : { x : 0, y : 1 }
-  },
-
-  controls = {
-    LEFT : 'move',
-    UP : 'move',
-    RIGHT : 'move',
-    DOWN : 'move'
-  };
-
   var pressed = false,
       touch = !!('ontouchstart' in window);
 
