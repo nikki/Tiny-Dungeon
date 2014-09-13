@@ -1,6 +1,6 @@
 TM.Player = (function() {
   var Stats = TM.Stats,
-      r = TM.Utils.randInt;
+      r = TM.Utils.r;
 
   function Player() {
     this.step = 0.25;
@@ -61,7 +61,7 @@ TM.Player = (function() {
     }
   };
 
-  Player.prototype.castAnimation = function() {
+  Player.prototype.cast = function() {
     var _this = this;
 
     var a = new TWEEN.Tween({ r : 0 })

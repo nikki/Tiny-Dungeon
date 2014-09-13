@@ -19,7 +19,6 @@ TM.Canvas = (function() {
       });
     },
 
-    // canvas.fillRect({ c : 'green', x : 0, y : 0, w : 40, h : 80 });
     fillRect : function(o) {
       ctx.fillStyle = o.c;
       ctx.fillRect(o.x, o.y, o.w, o.h);

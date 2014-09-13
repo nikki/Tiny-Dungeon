@@ -3,7 +3,7 @@ TM.Board = (function() {
       Tile = TM.Tile;
 
   var tile = new Tile,
-      tileSize = tile.size + tile.spacing,
+      tS = tile.size + tile.spacing,
       board = [];
 
   var Board = {
@@ -29,29 +29,32 @@ TM.Board = (function() {
       return grid;
     },
 
-    createTileAt : function(p) {
+    // create tile at
+    cTA : function(p) {
       board[p.x][p.y] = new Tile(p);
       this.numTiles += 1;
     },
 
-    getTileAtCell : function(cell) {
+    // get tile at cell
+    gTAC : function(cell) {
       if (this.cellInBounds(cell)) {
         return board[cell.x][cell.y];
       }
       return null;
     },
 
-    getTileAtScreenPos : function(pos) {
+    // get tile at screen pos
+    gTASP : function(pos) {
       pos.x = (pos.x - c.offsetLeft) / TM.s;
       pos.y = (pos.y - c.offsetTop) / TM.s;
 
       if (this.posInBounds(pos)) {
         pos.x -= this.x;
-        pos.x /= tileSize;
+        pos.x /= tS;
         pos.y -= this.y;
-        pos.y /= tileSize;
+        pos.y /= tS;
 
-        return this.getTileAtCell({ x : pos.x | 0, y : pos.y | 0 });
+        return this.gTAC({ x : pos.x | 0, y : pos.y | 0 });
       }
 
       return null;
@@ -60,7 +63,7 @@ TM.Board = (function() {
     moveTileTo : function(tile, cell) {
       board[tile.x][tile.y] = null;
       board[cell.x][cell.y] = tile;
-      tile.setNewPos(cell);
+      tile.nP(cell);
     },
 
     removeTileAt : function(cell) {
@@ -74,8 +77,8 @@ TM.Board = (function() {
     },
 
     posInBounds : function(p) {
-      return p.x >= this.x && p.x < this.x + (this.size * tileSize) &&
-             p.y >= this.y && p.y < this.y + (this.size * tileSize);
+      return p.x >= this.x && p.x < this.x + (this.size * tS) &&
+             p.y >= this.y && p.y < this.y + (this.size * tS);
     },
 
     validMove : function(prev, next) {
@@ -83,18 +86,20 @@ TM.Board = (function() {
              ((next.y === prev.y - 1 || next.y === prev.y + 1) && next.x === prev.x);
     },
 
-    getFarthestPos : function(cell) {
+    // get farthest pos
+    gFP : function(cell) {
       var prev;
 
       do {
         prev = cell;
         cell = { x : prev.x, y : prev.y + 1 }; // downwards vector
-      } while (this.cellInBounds(cell) && !this.getTileAtCell(cell));
+      } while (this.cellInBounds(cell) && !this.gTAC(cell));
 
       return prev;
     },
 
-    replaceMatchedTiles : function() {
+    // replace matched tiles
+    rMT : function() {
       var x, y, cell, tile, pos, sY = [];
 
       for (x = 0; x < this.size; x++) {
@@ -102,10 +107,10 @@ TM.Board = (function() {
 
         for (y = this.size - 1; y >= 0; y--) { // reverse dir
           cell = { x : x, y : y };
-          tile = this.getTileAtCell(cell);
+          tile = this.gTAC(cell);
 
           if (tile) {
-            pos = this.getFarthestPos(cell);
+            pos = this.gFP(cell);
             this.moveTileTo(tile, pos);
           } else {
             sY[x] += 1; // save tween pos
@@ -116,10 +121,10 @@ TM.Board = (function() {
       for (x = 0; x < this.size; x++) {
         for (y = 0; y < this.size; y++) {
           cell = { x : x, y : y };
-          tile = this.getTileAtCell(cell);
+          tile = this.gTAC(cell);
 
           if (!tile) {
-            this.createTileAt({ x : x, y : y, sY : -sY[x] });
+            this.cTA({ x : x, y : y, sY : -sY[x] });
           }
         }
       }
@@ -149,7 +154,7 @@ TM.Board = (function() {
       ctx.translate(this.x, this.y);
 
       ctx.beginPath();
-      ctx.rect(0, 0, this.size * tileSize, this.size * tileSize);
+      ctx.rect(0, 0, this.size * tS, this.size * tS);
       ctx.clip();
       ctx.closePath();
 

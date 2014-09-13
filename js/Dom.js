@@ -25,21 +25,21 @@ TM.Dom = (function(w, d) {
     init : function() {
       var _this = this;
 
-      this.bind(d, 'DOMContentLoaded', utils.loadAllAssets.call(utils));
-      this.bind(d, 'imagesLoaded', game.init);
+      this.bind(d, 'DOMContentLoaded', utils.lAssets.call(utils));
+      this.bind(d, 'imgsL', game.init);
       this.bind(d, 'gameReady', game.ready);
       this.bind(d, 'gameEnd', game.end);
 
       this.bind(d, 'mousedown touchstart', function(e) {
         var p = getClientPos(e, 1);
 
-        if (TM.currentScreen === 'title') {
+        if (TM.cS === 'title') {
           input.trigger('start');
           return;
         }
 
-        if (TM.currentScreen !== 'game') return;
-        input.trigger('firstInChain', { x : p.x, y : p.y });
+        if (TM.cS !== 'game') return;
+        input.trigger('first', { x : p.x, y : p.y });
         pressed = true;
         e.preventDefault();
       });
@@ -47,16 +47,16 @@ TM.Dom = (function(w, d) {
       this.bind(d, 'mousemove touchmove', function(e) {
         var p = getClientPos(e, 1);
 
-        if (TM.currentScreen !== 'game') return;
-        if (pressed) input.trigger('nextInChain', { x : p.x, y : p.y });
+        if (TM.cS !== 'game') return;
+        if (pressed) input.trigger('next', { x : p.x, y : p.y });
         e.preventDefault();
       });
 
       this.bind(d, 'mouseup touchend', function(e) {
         var p = getClientPos(e, 0);
 
-        if (TM.currentScreen !== 'game') return;
-        input.trigger('lastInChain', { x : p.x, y : p.y });
+        if (TM.cS !== 'game') return;
+        input.trigger('last', { x : p.x, y : p.y });
         pressed = false;
         e.preventDefault();
       });

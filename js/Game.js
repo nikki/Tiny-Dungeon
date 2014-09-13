@@ -10,11 +10,11 @@ TM.Game = (function(w, d) {
     currentTile : {},
     chain : [],
 
-    firstInChain : function(o) {
-      var tile = board.getTileAtScreenPos(o);
+    first : function(o) {
+      var tile = board.gTASP(o);
 
       if (tile) {
-        tile = board.getTileAtCell(tile);
+        tile = board.gTAC(tile);
 
         if (tile) {
           tile.selected = true;
@@ -24,12 +24,12 @@ TM.Game = (function(w, d) {
       }
     },
 
-    nextInChain : function(o) {
-      var tile = board.getTileAtScreenPos(o),
+    next : function(o) {
+      var tile = board.gTASP(o),
           previousTile, undo;
 
       if (tile) {
-        tile = board.getTileAtCell(tile);
+        tile = board.gTAC(tile);
 
         // tile is not same tile and is of correct type
         if (tile && tile !== this.currentTile && tile.type === this.currentTile.type) {
@@ -59,7 +59,7 @@ TM.Game = (function(w, d) {
       }
     },
 
-    lastInChain : function() {
+    last : function() {
       if (this.chain.length > 1) {
         // remove tiles
         this.chain.forEach(function(tile) {
@@ -70,17 +70,17 @@ TM.Game = (function(w, d) {
         // cast the spell
         dungeon.castSpell(this.chain.length);
 
-        // currently fighting enemy?
+        // currently fighting e?
         if (TM.wait) {
-          // hit enemy
-          dungeon.hitEnemy({ x : board.x, y : board.y }, this.currentTile, this.chain.length);
+          // hit e
+          dungeon.hE({ x : board.x, y : board.y }, this.currentTile, this.chain.length);
         } else {
           // matches += time
           dungeon.gainTime(this.chain.length / 2); // 0.5 secs for each tile matched
         }
 
         // add more tiles to board
-        board.replaceMatchedTiles();
+        board.rMT();
       } else {
         // deselect first tile
         if (this.chain[0]) this.chain[0].selected = false;
@@ -105,7 +105,7 @@ TM.Game = (function(w, d) {
         ctx.clearRect(0, 0, TM.w, TM.h);
 
         // update
-        if (dungeon.player) {
+        if (dungeon.p) {
           dungeon.update(seconds);
           board.update(seconds);
           TM.timer.update(seconds);
@@ -113,12 +113,12 @@ TM.Game = (function(w, d) {
         }
 
         // render
-        TM.Screens[TM.currentScreen]();
+        TM.Screens[TM.cS]();
       });
     },
 
     start : function() {
-      TM.currentScreen = 'game';
+      TM.cS = 'game';
       $('.social').style.display = 'none';
 
       TM.timer = new Timer;
@@ -129,7 +129,7 @@ TM.Game = (function(w, d) {
     },
 
     pause : function(hidden) {
-      if (TM.currentScreen !== 'game') return;
+      if (TM.cS !== 'game') return;
       TM.timer.pause(hidden);
     },
 
@@ -138,7 +138,7 @@ TM.Game = (function(w, d) {
           text = 'I survived for ' + dungeon.stats.totalTimeSurvived + ' seconds in the Tiny Dungeon ' + link;
 
       // set screen
-      TM.currentScreen = 'social';
+      TM.cS = 'social';
       TM.Screens.statsX = 0;
 
       // set link hrefs

@@ -5,26 +5,23 @@ TM.Timer = (function() {
     this.x = 68;
     this.y = 53;
     this.size = { x : 10, y : 64 };
-    this.maxTime = 45;
-    this.startTime = null;
+    this.mT = 60;
+    this.sT = null;
     this.time = 0;
-    this.tick = (this.size.y / this.maxTime);
-    this.timePenalty = null;
-    this.paused = false;
-    this.pausedAt = null;
+    this.tick = (this.size.y / this.mT);
   };
 
   Timer.prototype.init = function() {
-    this.startTime = +new Date();
+    this.sT = +new Date();
   };
 
   Timer.prototype.update = function(seconds) {
-    if (this.startTime) {
+    if (this.sT) {
       this.time += seconds;
     }
 
-    if (this.timePenalty && this.time > this.timePenalty.end) {
-      this.timePenalty = null;
+    if (this.tP && this.time > this.tP.end) {
+      this.tP = null;
     }
   };
 
@@ -40,9 +37,9 @@ TM.Timer = (function() {
     canvas.fillRect({ c : 'black', x : 1, y : 1, w : this.size.x - 2, h : this.size.y - 2 });
 
     // penalty
-    if (this.timePenalty) {
-      canvas.fillRect({ c : '#267AF6', x : 1, y : 1 + ((this.timePenalty.from + this.timePenalty.to) | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.time | 0) * this.tick });
-      canvas.fillRect({ c : 'red', x : 1, y : 1 + (this.timePenalty.from | 0) * this.tick, w : this.size.x - 2, h : (this.timePenalty.to | 0) * this.tick });
+    if (this.tP) {
+      canvas.fillRect({ c : '#267AF6', x : 1, y : 1 + ((this.tP.from + this.tP.to) | 0) * this.tick, w : this.size.x - 2, h : (this.size.y - 2) - (this.time | 0) * this.tick });
+      canvas.fillRect({ c : 'red', x : 1, y : 1 + (this.tP.from | 0) * this.tick, w : this.size.x - 2, h : (this.tP.to | 0) * this.tick });
     }
 
     // time
@@ -51,25 +48,25 @@ TM.Timer = (function() {
     ctx.restore();
   };
 
-  Timer.prototype.add = function(seconds, callback) {
+  Timer.prototype.add = function(seconds, cb) {
     if ((this.time - seconds) > 0) {
       this.time -= seconds;
     } else {
       this.time = 0;
     }
 
-    callback('+' + seconds + ' SECS');
+    cb('+' + seconds + ' SECS');
   };
 
-  Timer.prototype.remove = function(seconds, callback) {
-    this.timePenalty = {
+  Timer.prototype.remove = function(seconds, cb) {
+    this.tP = {
       from : this.time + seconds + 0.8,
       to : seconds,
       end : this.time
     };
     this.time += seconds;
 
-    callback('-' + seconds + ' SECS');
+    cb('-' + seconds + ' SECS');
   };
 
   Timer.prototype.pause = function(p) {
@@ -77,7 +74,7 @@ TM.Timer = (function() {
     if (this.paused) {
       this.pausedAt = +new Date();
     } else {
-      this.startTime += (+new Date() - this.pausedAt);
+      this.sT += (+new Date() - this.pausedAt);
     }
   }
 

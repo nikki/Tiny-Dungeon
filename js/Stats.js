@@ -4,11 +4,11 @@ TM.Stats = (function() {
     this.level = 0;
     this.highestCrit = {
       amount : 0,
-      enemy : '' // enemy name
+      e : '' // e name
     };
     this.mostDamageTaken = {
       amount : 0,
-      enemy : '' // enemy name
+      e : '' // e name
     };
     this.longestSpellChain = 0;
     this.damageTakenOverall = 0;

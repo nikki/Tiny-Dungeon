@@ -7,9 +7,9 @@ TM.Input = (function(w, d) {
     init : function() {
       this.bind('start', game.start);
       this.bind('pause', game.pause);
-      this.bind('firstInChain', game.firstInChain);
-      this.bind('nextInChain', game.nextInChain);
-      this.bind('lastInChain', game.lastInChain);
+      this.bind('first', game.first);
+      this.bind('next', game.next);
+      this.bind('last', game.last);
     },
 
     bind : function(action, handler) {

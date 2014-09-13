@@ -1,5 +1,5 @@
 TM.Enemy = (function() {
-  var r = TM.Utils.randInt;
+  var r = TM.Utils.r;
 
   var settings = [
     {
@@ -38,10 +38,6 @@ TM.Enemy = (function() {
     this.strength = this.level * 2;
     this.critChance = this.level + 10;
 
-    this.attacking = false;
-    this.attackFor = 0;
-    this.lastAttacked = null;
-
     this.image = TM.images['e_' + this.name];
     this.w = this.image.width;
     this.h = this.image.height;
@@ -57,7 +53,7 @@ TM.Enemy = (function() {
     ctx.fillRect(3, 3, 18 * (this.health / this.baseHealth), 2);
   };
 
-  Enemy.prototype.hit = function(o, callback) {
+  Enemy.prototype.hit = function(o, cb) {
     var base = 1, damage = 0, text = ' HP';
 
     if (o.spell === this.spell) {
@@ -71,7 +67,7 @@ TM.Enemy = (function() {
     damage = base * o.strength; // * level multiplier
 
     this.health -= damage;
-    callback(!!(base === 2), damage, '-' + damage + text);
+    cb(!!(base === 2), damage, '-' + damage + text);
   };
 
   Enemy.prototype.update = function(vel, seconds) {
@@ -87,7 +83,7 @@ TM.Enemy = (function() {
       this.attackFor -= seconds;
       if (this.attackFor < 0) this.attacking = false;
     } else {
-      this.lastAttacked += seconds;
+      this.lAt += seconds;
     }
 
     // dead?

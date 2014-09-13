@@ -97,15 +97,15 @@ TWEEN.Tween = function ( object ) {
   var _isPlaying = false;
   var _reversed = false;
   var _delayTime = 0;
-  var _startTime = null;
+  var _sT = null;
   var _easingFunction = TWEEN.Easing.Linear.None;
   var _interpolationFunction = TWEEN.Interpolation.Linear;
   var _chainedTweens = [];
-  var _onStartCallback = null;
-  var _onStartCallbackFired = false;
-  var _onUpdateCallback = null;
-  var _onCompleteCallback = null;
-  var _onStopCallback = null;
+  var _onStartcb = null;
+  var _onStartcbFired = false;
+  var _onUpdatecb = null;
+  var _onCompletecb = null;
+  var _onStopcb = null;
 
   // Set all starting values present on the target object
   for ( var field in object ) {
@@ -134,10 +134,10 @@ TWEEN.Tween = function ( object ) {
 
     _isPlaying = true;
 
-    _onStartCallbackFired = false;
+    _onStartcbFired = false;
 
-    _startTime = time !== undefined ? time : ( typeof window !== 'undefined' && window.performance !== undefined && window.performance.now !== undefined ? window.performance.now() : Date.now() );
-    _startTime += _delayTime;
+    _sT = time !== undefined ? time : ( typeof window !== 'undefined' && window.performance !== undefined && window.performance.now !== undefined ? window.performance.now() : Date.now() );
+    _sT += _delayTime;
 
     for ( var property in _valuesEnd ) {
 
@@ -178,9 +178,9 @@ TWEEN.Tween = function ( object ) {
     TWEEN.remove( this );
     _isPlaying = false;
 
-    if ( _onStopCallback !== null ) {
+    if ( _onStopcb !== null ) {
 
-      _onStopCallback.call( _object );
+      _onStopcb.call( _object );
 
     }
 
@@ -242,30 +242,30 @@ TWEEN.Tween = function ( object ) {
 
   };
 
-  this.onStart = function ( callback ) {
+  this.onStart = function ( cb ) {
 
-    _onStartCallback = callback;
+    _onStartcb = cb;
     return this;
 
   };
 
-  this.onUpdate = function ( callback ) {
+  this.onUpdate = function ( cb ) {
 
-    _onUpdateCallback = callback;
+    _onUpdatecb = cb;
     return this;
 
   };
 
-  this.onComplete = function ( callback ) {
+  this.onComplete = function ( cb ) {
 
-    _onCompleteCallback = callback;
+    _onCompletecb = cb;
     return this;
 
   };
 
-  this.onStop = function ( callback ) {
+  this.onStop = function ( cb ) {
 
-    _onStopCallback = callback;
+    _onStopcb = cb;
     return this;
 
   };
@@ -274,25 +274,25 @@ TWEEN.Tween = function ( object ) {
 
     var property;
 
-    if ( time < _startTime ) {
+    if ( time < _sT ) {
 
       return true;
 
     }
 
-    if ( _onStartCallbackFired === false ) {
+    if ( _onStartcbFired === false ) {
 
-      if ( _onStartCallback !== null ) {
+      if ( _onStartcb !== null ) {
 
-        _onStartCallback.call( _object );
+        _onStartcb.call( _object );
 
       }
 
-      _onStartCallbackFired = true;
+      _onStartcbFired = true;
 
     }
 
-    var elapsed = ( time - _startTime ) / _duration;
+    var elapsed = ( time - _sT ) / _duration;
     elapsed = elapsed > 1 ? 1 : elapsed;
 
     var value = _easingFunction( elapsed );
@@ -322,9 +322,9 @@ TWEEN.Tween = function ( object ) {
 
     }
 
-    if ( _onUpdateCallback !== null ) {
+    if ( _onUpdatecb !== null ) {
 
-      _onUpdateCallback.call( _object, value );
+      _onUpdatecb.call( _object, value );
 
     }
 
@@ -336,7 +336,7 @@ TWEEN.Tween = function ( object ) {
           _repeat--;
         }
 
-        // reassign starting values, restart by making startTime = now
+        // reassign starting values, restart by making sT = now
         for( property in _valuesStartRepeat ) {
 
           if ( typeof( _valuesEnd[ property ] ) === "string" ) {
@@ -357,15 +357,15 @@ TWEEN.Tween = function ( object ) {
           _reversed = !_reversed;
         }
 
-        _startTime = time + _delayTime;
+        _sT = time + _delayTime;
 
         return true;
 
       } else {
 
-        if ( _onCompleteCallback !== null ) {
+        if ( _onCompletecb !== null ) {
 
-          _onCompleteCallback.call( _object );
+          _onCompletecb.call( _object );
 
         }
 

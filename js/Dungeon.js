@@ -1,6 +1,6 @@
 TM.Dungeon = (function(d) {
   var canvas = TM.Canvas,
-      r = TM.Utils.randInt,
+      r = TM.Utils.r,
       spells = TM.Spells,
       Player = TM.Player,
       Enemy = TM.Enemy,
@@ -13,8 +13,8 @@ TM.Dungeon = (function(d) {
     h : 48,
 
     stats : null,
-    player : null,
-    enemy : null,
+    p : null,
+    e : null,
     texts : [],
 
     init : function() {
@@ -22,70 +22,70 @@ TM.Dungeon = (function(d) {
       this.vel = 1000;
 
       this.stats = null;
-      this.player = null;
-      this.spawnPlayer();
+      this.p = null;
+      this.sP();
 
-      this.enemy = null;
-      this.spawnEnemy();
+      this.e = null;
+      this.sE();
 
       this.bg = TM.images['bg'];
     },
 
-    spawnPlayer : function() {
-      this.player = new Player();
+    sP : function() {
+      this.p = new Player();
     },
 
-    spawnEnemy : function() {
-      var enemy = new Enemy({ level : this.player.level });
+    sE : function() {
+      var e = new Enemy({ level : this.p.level });
 
-      if (this.enemy && this.enemy.type === enemy.type) return this.spawnEnemy();
-      this.enemy = enemy;
+      if (this.e && this.e.type === e.type) return this.sE();
+      this.e = e;
     },
 
-    hitPlayer : function() {
-      var _this = this, hit = this.player.hit({ strength : this.enemy.strength, critChance : this.enemy.critChance });
+    hP : function() {
+      var _this = this, hit = this.p.hit({ strength : this.e.strength, critChance : this.e.critChance });
 
       TM.timer.remove(hit.damage, function(text) {
         if (hit.crit) _this.texts.push(new Text({ x : 118, y : 78, dY : 1, text : '*CRIT!*' }));
         _this.texts.push(new Text({ x : 118, y : 88, dY : 1, text : text }));
 
         // update damage stats
-        _this.player.stats.update('mostDamageTaken', { amount : hit.damage, enemy : _this.enemy.name });
-        _this.player.stats.update('damageTakenOverall', _this.player.stats.damageTakenOverall + hit.damage);
+        _this.p.stats.update('mostDamageTaken', { amount : hit.damage, e : _this.e.name });
+        _this.p.stats.update('damageTakenOverall', _this.p.stats.damageTakenOverall + hit.damage);
       });
 
-      // enemy 'animation' ^^
-      this.enemy.lastAttacked = 0;
-      this.enemy.attacking = true;
-      this.enemy.attackFor = 0.5;
+      // e 'animation' ^^
+      this.e.lAt = 0;
+      this.e.attacking = true;
+      this.e.attackFor = 0.5;
     },
 
-    hitEnemy : function(boardPos, tile, strength) {
+    hE : function(boardPos, tile, strength) {
       var _this = this;
 
-      // hit enemy
-      this.enemy.hit({ spell : tile.spell, strength : strength }, function(crit, damage, text) {
+      // hit e
+      this.e.hit({ spell : tile.spell, strength : strength }, function(crit, damage, text) {
         // draw damage text
         _this.texts.push(new Text({ x : 9, y : 20, dY : 1, text : text }));
 
         // update crit stat
         if (crit) {
-          _this.player.stats.update('highestCrit', { amount : damage, enemy : _this.enemy.name });
-          _this.hitPlayer(); // 33% chance of immediate retaliation
+          _this.p.stats.update('highestCrit', { amount : damage, e : _this.e.name });
+          _this.hP(); // 33% chance of immediate retaliation
           return;
         }
 
         // 33% chance of immediate retaliation
-        if (!r(0,2)) _this.hitPlayer();
+        if (!r(0,2)) _this.hP();
       });
     },
 
     castSpell : function(strength) {
-      // player cast animation
-      this.player.castAnimation();
+      // p cast animation
+      this.p.cast();
 
       // update spell chain stat
-      this.player.stats.update('longestSpellChain', strength);
+      this.p.stats.update('longestSpellChain', strength);
     },
 
     gainTime : function(seconds) {
@@ -106,21 +106,21 @@ TM.Dungeon = (function(d) {
       this.vel = TM.wait ? 0 : 1000;
       this.pos += this.vel;
 
-      // update player
-      this.player.update(seconds);
+      // update p
+      this.p.update(seconds);
 
-      // met an enemy, wait camera position
-      if (this.enemy.z < 5) TM.wait = true;
+      // met an e, wait camera position
+      if (this.e.z < 5) TM.wait = true;
 
-      // update enemy
-      if (this.enemy.dead) {
-        this.spawnEnemy();
-        this.player.level += 1.4;
-        this.player.stats.update('totalEnemiesKilled', this.player.stats.totalEnemiesKilled + 1);
+      // update e
+      if (this.e.dead) {
+        this.sE();
+        this.p.level += 1.4;
+        this.p.stats.update('totalEnemiesKilled', this.p.stats.totalEnemiesKilled + 1);
         TM.wait = false;
       } else {
-        if (TM.wait && this.enemy.lastAttacked > 8) this.hitPlayer();
-        this.enemy.update(this.vel, seconds);
+        if (TM.wait && this.e.lAt > 8) this.hP();
+        this.e.update(this.vel, seconds);
       }
     },
 
@@ -146,11 +146,11 @@ TM.Dungeon = (function(d) {
       // draw background
       ctx.drawImage(this.bg, 0, 0);
 
-      // render current enemy
-      this.enemy.render(this.w, this.h);
+      // render current e
+      this.e.render(this.w, this.h);
 
-      // render player sprite
-      this.player.render();
+      // render p sprite
+      this.p.render();
 
       // restore context
       ctx.restore();
@@ -169,26 +169,26 @@ TM.Dungeon = (function(d) {
         this.texts[j].render();
       }
 
-      // draw half-scaled (ie. 4px) enemy nameplate - it's the only way it'll fit
+      // draw half-scaled (ie. 4px) e nameplate - it's the only way it'll fit
       if (TM.wait) {
-        canvas.drawText({ text : (this.enemy.name).toUpperCase(), x : 2 * (this.x + this.w / 2) - (this.enemy.name.length / 2) * 4.3, y : 2 * (this.y + this.h - 7) });
+        canvas.drawText({ text : (this.e.name).toUpperCase(), x : 2 * (this.x + this.w / 2) - (this.e.name.length / 2) * 4.3, y : 2 * (this.y + this.h - 7) });
       }
 
       ctx.restore();
     },
 
     checkTimer: function() {
-      if (TM.timer.time >= TM.timer.maxTime) {
+      if (TM.timer.time >= TM.timer.mT) {
         // update total time survived
-        this.player.stats.update('totalTimeSurvived', ((+new Date() - TM.timer.startTime) / 1000) | 0);
+        this.p.stats.update('totalTimeSurvived', ((+new Date() - TM.timer.sT) / 1000) | 0);
 
         // game over
-        this.stats = this.player.stats;
+        this.stats = this.p.stats;
         event = new CustomEvent('gameEnd');
         d.dispatchEvent(event);
 
-        // destroy player
-        this.player = null;
+        // destroy p
+        this.p = null;
         return true;
       }
     }

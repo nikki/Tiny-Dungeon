@@ -4,7 +4,6 @@ var TM = {
   s : 4,
   images : [
     'font',
-    's_title',
     't_earth',
     't_water',
     't_air',
@@ -16,7 +15,7 @@ var TM = {
     'e_frostgiant',
     'bg'
   ],
-  currentScreen : 'title',
+  cS : 'title',
   timer : null,
   wait : false
 },
@@ -32,56 +31,52 @@ TM.Utils = (function() {
   var images = TM.images,
       len = images.length,
       obj = {},
-      numLoaded = 0;
+      n = 0;
 
   var Utils = {
-    loadImage : function(name) {
+    lImg : function(name) {
       img = new Image();
       img.src = 'img/' + name + '.png';
       img.onload = function() {
-        numLoaded++;
-        if (len === numLoaded) {
+        n++;
+        if (len === n) {
           TM.images = obj;
-          TM.imagesLoaded = true;
+          TM.imgsL = true;
         }
       };
       return img;
     },
 
-    loadImages : function(callback) {
+    lImgs : function(cb) {
       var i = 0;
 
       // iterate over and load all images
       for (; i < len; i++) {
-        obj[images[i]] = this.loadImage(images[i]);
+        obj[images[i]] = this.lImg(images[i]);
       }
     },
 
-    loadAllAssets : function() {
-      var imagesLoaded, event;
+    lAssets : function() {
+      var imgsL, event;
 
       // load all images
-      this.loadImages();
+      this.lImgs();
 
       // check if images are loaded yet
-      imagesLoaded = function() {
-        if (TM.imagesLoaded) {
-          event = new CustomEvent('imagesLoaded');
+      imgsL = function() {
+        if (TM.imgsL) {
+          event = new CustomEvent('imgsL');
           document.dispatchEvent(event);
         } else {
-          setTimeout(imagesLoaded, 100)
+          setTimeout(imgsL, 100)
         }
       };
 
       // init images loaded check
-      setTimeout(imagesLoaded, 100);
+      setTimeout(imgsL, 100);
     },
 
-    rand : function(min, max) {
-      return (Math.random() * (max - min + 1)) + min;
-    },
-
-    randInt : function(min, max) {
+    r : function(min, max) {
       return (Math.random() * (max - min + 1)) | 0 + min;
     }
   };

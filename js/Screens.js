@@ -8,9 +8,8 @@ TM.Screens = (function() {
     title : function() {
       ctx.save();
       ctx.scale(TM.s, TM.s);
-      canvas.drawText({ text : 'Tiny Dungeon', x : 13.5, y : 12 });
-      canvas.drawText({ text : (touch ? 'Tap' : 'Click') + ' To Start' , x : (touch ? 14 : 12.5), y : 102 });
-      ctx.drawImage(TM.images['s_title'], 18, 36); // from http://opengameart.org/content/dungeon-tileset
+      canvas.drawText({ text : 'Tiny Dungeon', x : 13.5, y : 42 });
+      canvas.drawText({ text : (touch ? 'Tap' : 'Click') + ' To Start' , x : (touch ? 14 : 12.5), y : 66 });
       ctx.restore();
     },
 
@@ -47,8 +46,8 @@ TM.Screens = (function() {
         text :
           '   Enemies killed: ' + stats.totalEnemiesKilled +
           '   Longest spell chain: ' + stats.longestSpellChain +
-          '   Highest critical strike: ' + stats.highestCrit.amount + ' on ' + stats.highestCrit.enemy +
-          '   Most damage taken: ' + stats.mostDamageTaken.amount + ' from ' + stats.mostDamageTaken.enemy +
+          '   Highest critical strike: ' + stats.highestCrit.amount + ' on ' + stats.highestCrit.e +
+          '   Most damage taken: ' + stats.mostDamageTaken.amount + ' from ' + stats.mostDamageTaken.e +
           '   Damage taken overall: ' + stats.damageTakenOverall,
         x : 80 - this.statsX,
         y : 103
