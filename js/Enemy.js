@@ -13,11 +13,6 @@ TM.Enemy = (function() {
       weakTo : 'water'
     },
     {
-      name : 'banshee',
-      spell : 'air',
-      weakTo : 'earth'
-    },
-    {
       name : 'frostgiant',
       spell : 'water',
       weakTo : 'fire'

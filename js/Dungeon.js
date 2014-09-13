@@ -2,7 +2,6 @@ TM.Dungeon = (function(d) {
   var canvas = TM.Canvas,
       r = TM.Utils.randInt,
       spells = TM.Spells,
-      audio = TM.Audio,
       Player = TM.Player,
       Enemy = TM.Enemy,
       Text = TM.Text;

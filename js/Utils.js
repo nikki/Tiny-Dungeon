@@ -12,7 +12,6 @@ var TM = {
     'p_mage',
     'p_staff',
     'e_lasher',
-    'e_banshee',
     'e_imp',
     'e_frostgiant',
     'bg'

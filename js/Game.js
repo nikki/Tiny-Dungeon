@@ -93,7 +93,6 @@ TM.Game = (function(w, d) {
     init : function() {
       var event;
 
-      audio.init();
       font.init();
       canvas.init();
 
